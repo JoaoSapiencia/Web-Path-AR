@@ -16,9 +16,10 @@
 | | |
 |---|---|
 | **Fase corrente** | 0 — Esqueleto ambulante |
-| **Concluído** | `ARCHITECTURE.md`, `DECISIONS.md`; inspeção inicial de um GLB |
+| **Concluído** | `ARCHITECTURE.md`, `DECISIONS.md`, `ROADMAP.md` commitados no `main`; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`); cadeia Git → GitHub → Cloudflare Pages → URL pública validada via branch de teste (critério de pronto da Fase 0 atingido nesse fluxo) |
+| **Adiantado de propósito** | Parte da Fase 3 (AR no iOS) já foi testada em iPhone real com o CubeSat, antes da ordem do roteiro — decisão deliberada para validar primeiro o risco técnico mais alto (ver [ADR-007](DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) e [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md)). Resultado: AR Quick Look, USDZ on-device e escala confirmados para este modelo. Isso não substitui a Fase 3 completa (falta o resto do acervo) nem a Fase 2 (AR no Android, ainda não testada) |
 | **Bloqueios** | Nenhum |
-| **Pendências** | Nome definitivo do repositório; registro de ADR-009 (PWA) |
+| **Pendências** | Nome definitivo do repositório; registro de ADR-009 (PWA); reverter `index.html` de teste para `satelites/cubesat/index.html` na branch de teste antes de qualquer merge (ver nota no CUBESAT_PILOT.md §7); teste equivalente em Android real (Scene Viewer) |
 
 ---
 

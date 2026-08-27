@@ -187,7 +187,7 @@ Algum asset individual se aproximar de 20 MB.
 
 ## ADR-007 — USDZ gerado no dispositivo
 
-**Status:** Aceita — **validação pendente (Fase 3)**
+**Status:** Aceita — **validada em iPhone real para o modelo CubeSat 1U (2026-08-27); pendente para os demais modelos do acervo**
 
 **Contexto**
 AR no iOS exige USDZ. Gerar USDZ previamente costuma exigir macOS e produz
@@ -211,6 +211,13 @@ exatamente o caso suportado. Elimina metade do pipeline de assets.
 Validar em iPhone real, **modelo a modelo**, na Fase 3. Se um modelo falhar,
 ele recebe `ios-src` pré-gerado — a decisão é revertida por exceção, não no
 todo.
+
+**Validação registrada**
+CubeSat 1U testado em iPhone real em 2026-08-27: AR Quick Look abriu, USDZ
+gerado on-device com sucesso, escala fisicamente plausível. Detalhes completos
+em [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md#7-resultado-do-teste-em-iphone-real--2026-08-27).
+Continua pendente: os demais modelos do acervo, e o comportamento equivalente
+no Android (Scene Viewer) para este mesmo modelo.
 
 ---
 

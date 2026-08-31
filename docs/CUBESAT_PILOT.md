@@ -71,23 +71,22 @@ Estas são leituras que fazem sentido técnico, mas dependem de inferência — 
 
 Itens que exigem teste em navegador/dispositivo real antes de serem tratados como fato.
 
-- **Suporte a Draco no `<model-viewer>` na prática.** O componente normalmente inclui o decodificador Draco e busca o WASM correspondente de um CDN do Google na primeira execução — isso introduz uma dependência de rede externa ainda não testada nesta rede/projeto.
-- **Suporte a Draco no Scene Viewer (Android).** O Scene Viewer não roda dentro do `<model-viewer>`; ele é um app nativo que recebe um link para o GLB e faz seu próprio parsing. Não há confirmação de que ele descomprime Draco da mesma forma.
-- **Geração de USDZ a partir de um modelo Draco-comprimido.** A conversão para USDZ acontece no dispositivo, a partir da cena já decodificada — em teoria não deveria ser afetada pela compressão em si, mas ainda depende do decode Draco ter funcionado primeiro.
-- **Escala real de exibição.** Ver seção dedicada abaixo — este é o ponto mais importante em aberto.
-- **Orientação visual correta.** A conversão de eixos é esperada, mas só a confirmação visual (modelo "em pé", não deitado ou de cabeça para baixo) valida isso de fato.
+- ~~Suporte a Draco no `<model-viewer>` na prática.~~ **Validado em 2026-08-27** — ver seção 7. O modelo carregou e decodificou corretamente no Safari do iPhone via preview do Cloudflare Pages.
+- **Suporte a Draco no Scene Viewer (Android).** Ainda não testado. O Scene Viewer não roda dentro do `<model-viewer>`; ele é um app nativo que recebe um link para o GLB e faz seu próprio parsing. Não há confirmação de que ele descomprime Draco da mesma forma — a validação no iOS não se estende ao Android, porque o caminho de dados é diferente (ver seção 6.6).
+- ~~Geração de USDZ a partir de um modelo Draco-comprimido.~~ **Validado em 2026-08-27** — ver seção 7. A conversão para USDZ funcionou no dispositivo.
+- ~~Escala real de exibição.~~ **Validado para iOS em 2026-08-27**, com ressalvas — ver seções 6.7 e 7. Ainda pendente para Android.
+- **Orientação visual correta.** Validada indiretamente (o modelo abriu "em pé" no teste), mas não foi um objetivo explícito do teste de 2026-08-27 — vale confirmação dedicada mais adiante.
 
 ---
 
 ## 5. Próximos testes
 
-Em ordem de prioridade para o piloto:
-
-1. Carregar o GLB num `<model-viewer>` mínimo e confirmar visualmente orientação e proporções.
-2. Testar carregamento em rede real (não apenas localhost) para validar a dependência do CDN do decodificador Draco.
-3. Testar Scene Viewer em um Android real.
-4. Testar AR Quick Look em um iPhone real (condição de aceitação do [ADR-007](../DECISIONS.md#adr-007--usdz-gerado-no-dispositivo)).
-5. Resolver a questão de escala (seção 6) antes dos testes de AR, já que escala errada invalida qualquer teste de AR feito depois.
+1. ~~Carregar o GLB num `<model-viewer>` mínimo e confirmar visualmente orientação e proporções.~~ **Feito em 2026-08-27.**
+2. ~~Testar carregamento em rede real (não apenas localhost) para validar a dependência do CDN do decodificador Draco.~~ **Feito em 2026-08-27**, via preview do Cloudflare Pages + rede do iPhone.
+3. **Testar Scene Viewer em um Android real.** Ainda pendente — é o maior ponto em aberto do piloto agora (ver seção 6.6).
+4. ~~Testar AR Quick Look em um iPhone real.~~ **Feito em 2026-08-27** — ver seção 7. Condição de aceitação do [ADR-007](../DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) cumprida para este modelo.
+5. ~~Resolver a questão de escala antes dos testes de AR.~~ Superado pela ordem real dos eventos: o teste de AR acabou também testando a escala (seção 7). Resultado dentro do esperado.
+6. **Repetir o teste no Android real**, isolando se a correção de escala via atributo HTML chega ou não ao Scene Viewer — este é o teste que decide entre a Opção A e a Opção B da seção 6.5.
 
 ---
 
@@ -162,6 +161,35 @@ Este é o motivo pelo qual não estou recomendando a Opção B de forma unilater
 
 ### 6.7 Estado da decisão
 
-**Ainda não decidido.** Antes de escolher entre Opção A e Opção B, o teste que resolve a dúvida é justamente o item 3 da seção 5 (Scene Viewer em Android real) — carregar o modelo sem correção nenhuma, aplicar `scale` só via HTML, e ver se o Android respeita isso ou não. O resultado desse teste determina se a Opção B é suficiente ou se precisamos migrar para a Opção A.
+**Parcialmente decidido — confirmado para iOS, pendente para Android.**
 
-Como isso envolve decidir se voltamos a tocar no pipeline de assets (potencialmente relevante para o ADR-005), a decisão final será registrada em `DECISIONS.md` como um novo ADR somente depois de confirmada com o usuário — não antes.
+O teste de 2026-08-27 (seção 7) confirma que a Opção B (`scale` via `<model-viewer>`, sem tocar no arquivo) funciona no iOS: o USDZ gerado on-device herdou a correção de escala aplicada na página, resultando num objeto fisicamente próximo do tamanho real de um CubeSat 1U.
+
+Isso **não decide a questão para o Android**. O raciocínio da seção 6.6 continua de pé: o Scene Viewer recebe um link para o arquivo bruto, fora do runtime da página, então nada garante que ele respeite o mesmo atributo `scale`. Enquanto esse teste não for feito, a Opção B é considerada válida apenas para iOS.
+
+Se o teste em Android confirmar que a Opção B também funciona lá, ela vira a abordagem padrão do projeto para todos os satélites, e não é necessário nenhum ADR novo — apenas registrar o padrão de implementação.
+
+Se o teste em Android mostrar que a correção não chega ao Scene Viewer, migramos para a Opção A (corrigir a escala no próprio GLB) e, aí sim, registro um ADR novo em `DECISIONS.md`, só depois de confirmado com o usuário.
+
+---
+
+## 7. Resultado do teste em iPhone real — 2026-08-27
+
+**Ambiente:** página `test/cubesat-ios-ar-scale`, publicada via preview deployment do Cloudflare Pages, aberta no Safari de um iPhone real.
+
+**Nota sobre o deploy:** o teste só funcionou depois de mover o arquivo de teste para a raiz do repositório nessa branch (`index.html` em vez de `satelites/cubesat/index.html`), porque o Cloudflare Pages estava servindo o mesmo HTML para qualquer rota não encontrada (comportamento de fallback tipo SPA), o que incluía o caminho do `.glb` — o modelo nunca era servido de fato, resultando em tela preta. Isso foi confirmado comparando as respostas HTTP de `/`, `/satelites/cubesat/`, do próprio `.glb` e de uma rota inexistente: todas retornavam o mesmo HTML com status 200. **Esse posicionamento na raiz é temporário, só para viabilizar o teste**, e conflita com o [ADR-003](../DECISIONS.md#adr-003--o-globo-é-a-home) (raiz reservada para o globo) se deixado assim. Deve ser revertido para `satelites/cubesat/index.html` antes de qualquer merge para `main`.
+
+**Resultados:**
+
+| Item | Resultado |
+|---|---|
+| Botão de AR aparece | Sim |
+| Cena abre (sem travar em carregamento infinito) | Sim |
+| Draco decodificado corretamente | Sim (implícito — o modelo é ilegível sem isso) |
+| USDZ gerado on-device com sucesso | Sim |
+| Escala fisicamente plausível | Sim — medido ~12 cm de altura com régua física, contra os ~10-11,35 cm esperados de um CubeSat 1U real |
+| Conflito conhecido entre `ar-scale="fixed"` e auto-geração de USDZ (nota do `ROADMAP.md`, Fase 3) | Não observado neste teste |
+
+**Interpretação:** a hipótese de escala (`scale="0.048 0.048 0.048"`, seção 6.4) está validada para iOS dentro da margem de erro de uma medição manual com régua. Não há indicação de que precise de ajuste fino agora.
+
+**Não testado neste momento:** materiais/cores comparados lado a lado com a visualização no navegador; tempo entre toque e abertura do AR; comportamento em outros pontos de entrada além do Safari direto (ver `ROADMAP.md`, Teste 0 — Safari vs QR Code vs navegador embutido). Ficam como itens da Fase 3 completa, não deste piloto.

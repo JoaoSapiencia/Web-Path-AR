@@ -13,7 +13,8 @@
 
 | Campo | Valor |
 |---|---|
-| Caminho | `assets/models/cubesat/CubeSat - 1 RU Generic.glb` |
+| Caminho | `assets/models/cubesat/modelo.glb` |
+| Nome original | `CubeSat - 1 RU Generic.glb` (renomeado na Fase 0 para o padrão `assets/models/<slug>/modelo.glb` do [ARCHITECTURE.md](../ARCHITECTURE.md#5-estrutura-de-diretórios); os espaços no nome também eram um suspeito no problema de roteamento da §7) |
 | Origem | NASA 3D Resources |
 | Tamanho real | 149.424 bytes (~145,9 KB) |
 | Gerador declarado | `Khronos glTF Blender I/O v4.2.57` |
@@ -177,7 +178,14 @@ Se o teste em Android mostrar que a correção não chega ao Scene Viewer, migra
 
 **Ambiente:** página `test/cubesat-ios-ar-scale`, publicada via preview deployment do Cloudflare Pages, aberta no Safari de um iPhone real.
 
-**Nota sobre o deploy:** o teste só funcionou depois de mover o arquivo de teste para a raiz do repositório nessa branch (`index.html` em vez de `satelites/cubesat/index.html`), porque o Cloudflare Pages estava servindo o mesmo HTML para qualquer rota não encontrada (comportamento de fallback tipo SPA), o que incluía o caminho do `.glb` — o modelo nunca era servido de fato, resultando em tela preta. Isso foi confirmado comparando as respostas HTTP de `/`, `/satelites/cubesat/`, do próprio `.glb` e de uma rota inexistente: todas retornavam o mesmo HTML com status 200. **Esse posicionamento na raiz é temporário, só para viabilizar o teste**, e conflita com o [ADR-003](../DECISIONS.md#adr-003--o-globo-é-a-home) (raiz reservada para o globo) se deixado assim. Deve ser revertido para `satelites/cubesat/index.html` antes de qualquer merge para `main`.
+**Nota sobre o deploy:** o teste só funcionou depois de mover o arquivo de teste para a raiz do repositório nessa branch (`index.html` em vez de `satelites/cubesat/index.html`), porque o Cloudflare Pages estava servindo o mesmo HTML para qualquer rota não encontrada (comportamento de fallback tipo SPA), o que incluía o caminho do `.glb` — o modelo nunca era servido de fato, resultando em tela preta. Isso foi confirmado comparando as respostas HTTP de `/`, `/satelites/cubesat/`, do próprio `.glb` e de uma rota inexistente: todas retornavam o mesmo HTML com status 200. **Esse posicionamento na raiz era temporário, só para viabilizar o teste**, e conflita com o [ADR-003](../DECISIONS.md#adr-003--o-globo-é-a-home) (raiz reservada para o globo). **Já revertido** para `satelites/cubesat/index.html` no commit `fbf71ad`, antes do merge para `main`.
+
+**Consequência não resolvida:** como o teste rodou com o arquivo na raiz, ele **não** validou a rota `/satelites/cubesat/`. O contrato de URL do [ADR-002](../DECISIONS.md#adr-002--urls-em-caminho-não-em-query-string) continua sem confirmação em deploy real — é o item em aberto da Fase 0 (ver `ROADMAP.md`). Duas causas plausíveis foram identificadas para o comportamento de 200-para-tudo, e nenhuma está confirmada:
+
+1. **Ausência de `404.html`.** Sem esse arquivo, o Cloudflare Pages pode cair num fallback que devolve o `index.html` da raiz. Um `404.html` foi adicionado na Fase 0 como hipótese de correção.
+2. **Espaços no nome do arquivo GLB.** O caminho original continha espaços (`CubeSat%20-%201%20RU%20Generic.glb`). O arquivo foi renomeado para `modelo.glb` na Fase 0, eliminando essa variável.
+
+Como as duas mudanças entram juntas, um teste bem-sucedido não distingue qual delas resolveu. Isso é aceitável aqui — o objetivo é a rota funcionar, não atribuir a causa —, mas fica registrado que a atribuição de causa não foi feita.
 
 **Resultados:**
 

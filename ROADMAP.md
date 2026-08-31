@@ -1,4 +1,4 @@
-# Roteiro de Desenvolvimento — Satellite AR
+# Roteiro de Desenvolvimento — Web Path AR
 
 > Documento de **planejamento**. Muda com frequência.
 >
@@ -16,10 +16,10 @@
 | | |
 |---|---|
 | **Fase corrente** | 0 — Esqueleto ambulante |
-| **Concluído** | `ARCHITECTURE.md`, `DECISIONS.md`, `ROADMAP.md` commitados no `main`; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`); cadeia Git → GitHub → Cloudflare Pages → URL pública validada via branch de teste (critério de pronto da Fase 0 atingido nesse fluxo) |
+| **Concluído** | `ARCHITECTURE.md`, `DECISIONS.md`, `ROADMAP.md`, `README.md`, `.gitignore`, `index.html` e `404.html` no `main`; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`); cadeia Git → GitHub → Cloudflare Pages → URL pública exercitada via preview deployment na branch de teste |
 | **Adiantado de propósito** | Parte da Fase 3 (AR no iOS) já foi testada em iPhone real com o CubeSat, antes da ordem do roteiro — decisão deliberada para validar primeiro o risco técnico mais alto (ver [ADR-007](DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) e [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md)). Resultado: AR Quick Look, USDZ on-device e escala confirmados para este modelo. Isso não substitui a Fase 3 completa (falta o resto do acervo) nem a Fase 2 (AR no Android, ainda não testada) |
-| **Bloqueios** | Nenhum |
-| **Pendências** | Nome definitivo do repositório; registro de ADR-009 (PWA); reverter `index.html` de teste para `satelites/cubesat/index.html` na branch de teste antes de qualquer merge (ver nota no CUBESAT_PILOT.md §7); teste equivalente em Android real (Scene Viewer) |
+| **Bloqueios** | Nenhum. **Em aberto (não bloqueante):** confirmar em deploy real que `/satelites/<slug>/` e o `.glb` são servidos corretamente — no teste de 2026-08-27 o Cloudflare Pages devolvia o mesmo HTML com status 200 para qualquer rota (CUBESAT_PILOT.md §7). O `404.html` recém-adicionado é a hipótese de correção, ainda não verificada. |
+| **Pendências** | Registro de ADR-009 (PWA); teste equivalente em Android real (Scene Viewer); domínio próprio (bloqueante só na Fase 9) |
 
 ---
 
@@ -67,8 +67,29 @@ enquanto ainda não há nada para culpar por uma falha.
 
 **Critério de pronto:** a página abre numa URL pública, no celular.
 
+**Verificação em deploy real** (localhost não reproduz o roteamento do
+Cloudflare Pages — só o deploy é conclusivo):
+
+- [ ] `/` abre e mostra a página inicial
+- [ ] `/satelites/cubesat/` abre a página de teste, **não** a página inicial
+- [ ] `/assets/models/cubesat/modelo.glb` baixa o binário
+      (`Content-Type: model/gltf-binary`, ~146 KB), não HTML
+- [ ] uma rota inexistente devolve status **404**, não 200
+- [ ] os quatro itens acima conferidos também num celular real
+
+O segundo, o terceiro e o quarto item são o motivo de esta fase ainda não
+estar fechada: no teste de 2026-08-27 todas as rotas devolviam o mesmo HTML
+com status 200 (CUBESAT_PILOT.md §7). Enquanto isso não for verificado, o
+contrato de URL do [ADR-002](DECISIONS.md#adr-002--urls-em-caminho-não-em-query-string)
+— que vai virar QR Code impresso — não está validado.
+
 **Não fazer:** dependências, diretórios de fases futuras, qualquer código de
 mapa ou 3D.
+
+> **Exceção consciente:** `satelites/cubesat/index.html` está no `main` e
+> carrega `<model-viewer>`. Ele é o artefato do teste de AR já realizado, e
+> serve de sonda para verificar o roteamento acima. Não é a entrega da
+> Fase 1 — aquela vem de JSON, com poster e CSS próprio.
 
 **Aprendizado:** o que é um site estático; Git e GitHub aplicados a deploy;
 Cloudflare Pages; preview deployments por branch.

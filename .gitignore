@@ -1,0 +1,40 @@
+# Material de aprendizado pessoal — fora do Git por escolha.
+# Backup vem do OneDrive, nao do repositorio.
+aprendizado/
+
+# Ambiente Python local (ferramentas de otimização de assets)
+env/
+.venv/
+__pycache__/
+*.pyc
+
+# Dependências de ferramentas Node (tools/), se vierem a existir
+node_modules/
+
+# Arquivos originais e intermediários — ver ADR-005.
+# Originais (fotos e modelos brutos) ficam FORA do repositório.
+# Só o resultado final otimizado é versionado.
+originais/
+*.blend
+*.blend1
+*.psd
+*.tif
+*.tiff
+*.CR2
+*.NEF
+
+# Segredos — nunca versionar
+.env
+.env.*
+*.pem
+*.key
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Path AR</title>
+  <meta name="description" content="Aplicação educacional sobre satélites, missões e exploração espacial.">
+  <meta name="color-scheme" content="dark">
+  <style>
+    :root {
+      --fundo: #05070d;
+      --texto: #e8eaf0;
+      --secundario: #9aa3b8;
+      --borda: #1c2233;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--fundo);
+      color: var(--texto);
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Mobile-first: o layout base é o de tela pequena.
+       Nenhuma media query aumenta a complexidade aqui ainda. */
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      line-height: 1.2;
+      margin: 0 0 0.5rem;
+    }
+
+    .subtitulo {
+      color: var(--secundario);
+      margin: 0 0 2rem;
+    }
+
+    .aviso {
+      border: 1px solid var(--borda);
+      border-radius: 0.5rem;
+      padding: 1rem 1.25rem;
+      color: var(--secundario);
+      font-size: 0.95rem;
+    }
+
+    .aviso h2 {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--texto);
+      margin: 0 0 0.5rem;
+    }
+
+    a { color: #7fb2ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Web Path AR</h1>
+    <p class="subtitulo">
+      Satélites, missões e exploração espacial — material de apoio a aulas.
+    </p>
+
+    <div class="aviso">
+      <h2>Fase 0 — Esqueleto ambulante</h2>
+      <p>
+        Esta página existe para validar a cadeia de publicação
+        (Git → GitHub → Cloudflare Pages → URL pública) antes de haver
+        qualquer código de mapa ou 3D para culpar por uma falha.
+      </p>
+      <p>
+        Na Fase 5 esta rota passa a renderizar o globo interativo
+        (ADR-003). Nada aqui é definitivo, exceto a URL.
+      </p>
+    </div>
+  </main>
+</body>
+</html>

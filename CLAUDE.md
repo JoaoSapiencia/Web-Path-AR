@@ -304,6 +304,8 @@ Não explique trivialidades linha por linha.
 
 Priorize o raciocínio.
 
+Mantenha toda essa linha de raciocínio documentada em md na pasta aprendizado mantendo deixando um documento por fase realizada explicando os tópicos acima.
+
 ---
 
 # 13. Não faça mudanças silenciosas

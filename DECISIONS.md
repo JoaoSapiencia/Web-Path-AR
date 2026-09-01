@@ -353,3 +353,67 @@ essa segunda dependência externa.
 **Reavaliar quando**
 Fase 8, com número de rede móvel real — ou antes, se o unpkg falhar em
 qualquer teste.
+
+---
+
+## ADR-011 — `userAgent` apenas para o aviso de AR no iOS
+
+**Status:** Aceita
+
+**Contexto**
+O projeto detecta capacidade, não navegador. WebGL é testado tentando obter
+um contexto; a disponibilidade de AR é lida do próprio `<model-viewer>`, via
+`canActivateAR`. Nenhum desses caminhos pergunta "quem é você?".
+
+Há um caso em que isso não basta.
+
+O AR Quick Look só funciona de verdade no Safari. Dentro de um navegador
+embutido de aplicativo (WhatsApp, Instagram, Slack) o iOS usa um WKWebView
+que **responde afirmativamente à verificação de capacidade** e depois falha
+— exibindo o USDZ como texto, ou não fazendo nada.
+
+Ou seja: a detecção de capacidade mente. Não há API que responda "este AR
+vai realmente abrir".
+
+Isso importa porque a entrada principal do projeto é QR Code, e links são
+frequentemente compartilhados por aplicativos de mensagem antes de virarem
+papel impresso.
+
+**Decisão**
+Usar `navigator.userAgent` **exclusivamente** para decidir se mostra o aviso
+"abra no Safari". Em todo o resto, detecção de capacidade.
+
+O aviso é **não-bloqueante**: a visualização 3D funciona nesses navegadores
+e não é afetada.
+
+**Razão**
+A alternativa seria não avisar nada e deixar o aluno tocar num botão que não
+faz nada — que é exatamente o que a Fase 4 existe para eliminar.
+
+Como a heurística pode errar, o custo de errar foi mantido baixo: um aviso
+de texto, sem bloquear nada.
+
+**Heurística usada**
+
+- iOS: `iPad|iPhone|iPod` no `userAgent`, ou `MacIntel` com
+  `maxTouchPoints > 1` (iPad recente se identifica como Mac).
+- Safari de verdade: contém `Version/` **e** `Safari/`, e não contém
+  `CriOS`, `FxiOS`, `EdgiOS`, `OPiOS` ou `GSA/`.
+
+Chrome, Firefox e Edge no iOS entram na lista porque são WKWebView com outro
+nome, e têm o mesmo problema.
+
+**Consequências**
+- (+) Ninguém toca num botão de AR que não vai funcionar sem explicação.
+- (−) `userAgent` envelhece. Um navegador novo pode ser classificado errado.
+- (−) O risco de **falso positivo** — avisar no Safari legítimo — é o pior
+  caso, porque instrui a fazer algo já feito.
+
+**Validação**
+Nove strings de `userAgent` reais conferidas em 2026-09-01: Safari iOS e
+iPad **não** disparam o aviso; WhatsApp, Instagram, Chrome iOS e Firefox iOS
+disparam. Falta confirmar em aparelho real.
+
+**Reavaliar quando**
+Surgir uma API que responda de fato se o AR Quick Look vai abrir, ou se
+aparecerem relatos de falso positivo em Safari.

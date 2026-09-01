@@ -126,6 +126,8 @@ button:focus-visible {
   /* Reserva o espaço ANTES de o modelo carregar.
      Sem isso, o conteúdo abaixo salta quando o visor aparece. */
   aspect-ratio: 4 / 3;
+  /* Contexto de posicionamento da barra de progresso. */
+  position: relative;
   width: 100%;
   background: var(--superficie);
   border: 1px solid var(--borda);
@@ -172,6 +174,36 @@ model-viewer {
   color: var(--destaque);
 }
 
+/* Barra de progresso do download do modelo. Fica sobre o visor e some
+   quando o carregamento termina. <progress> nativo tem aparência própria
+   em cada navegador, então os estilos abaixo cobrem os dois motores. */
+.progresso {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(60%, 16rem);
+  height: 0.35rem;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  background: var(--borda);
+  overflow: hidden;
+}
+
+.progresso::-webkit-progress-bar {
+  background: var(--borda);
+}
+
+.progresso::-webkit-progress-value {
+  background: var(--destaque);
+  transition: width 0.2s linear;
+}
+
+.progresso::-moz-progress-bar {
+  background: var(--destaque);
+}
+
 .visor-legenda {
   margin: 0.5rem 0 2rem;
   font-size: 0.85rem;
@@ -207,14 +239,32 @@ model-viewer {
 
 /* ---------- Estados ---------- */
 
+/* Um único elemento serve os três tipos de aviso. A cor da borda esquerda
+   é o que diferencia — não a cor do texto, que precisa continuar legível. */
 .estado {
   border: 1px solid var(--borda);
+  border-left: 3px solid var(--secundario);
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
+  margin: 0 0 1.5rem;
   color: var(--secundario);
   font-size: 0.95rem;
 }
 
+.estado--erro {
+  border-left-color: #ff8a7a;
+}
+
+.estado--aviso {
+  border-left-color: #ffc46b;
+}
+
+.estado--info {
+  border-left-color: var(--destaque);
+}
+
+/* [hidden] sozinho já esconderia, mas qualquer display futuro em .estado
+   passaria por cima dele. Explicitar aqui torna o estado inicial confiável. */
 .estado[hidden] {
   display: none;
 }

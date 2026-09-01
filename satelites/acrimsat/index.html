@@ -15,6 +15,15 @@
           src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
   <script type="module" src="/src/satelite-page.js"></script>
+
+  <noscript>
+    <style>
+      /* Sem JavaScript nada é inserido no visor: esconder evita uma caixa
+         preta muda e uma legenda mandando arrastar algo que não existe. */
+      .visor,
+      .visor-legenda { display: none; }
+    </style>
+  </noscript>
 </head>
 
 <body data-slug="acrimsat">
@@ -30,6 +39,13 @@
       Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.
     </p>
 
+    <noscript>
+      <p class="estado estado--aviso">
+        Esta página precisa de JavaScript para exibir o modelo 3D e o
+        conteúdo completo. O texto acima continua legível.
+      </p>
+    </noscript>
+
     <!-- O <model-viewer> é inserido aqui pelo JavaScript. A caixa já ocupa
          o espaço via aspect-ratio no CSS, então o texto abaixo não salta
          quando o modelo aparece. -->
@@ -38,7 +54,7 @@
       Arraste para girar. Modelo: NASA 3D Resources.
     </p>
 
-    <p class="estado" id="erro" hidden></p>
+    <p class="estado" id="erro" role="status" aria-live="polite" hidden></p>
 
     <dl class="ficha" id="ficha"></dl>
 

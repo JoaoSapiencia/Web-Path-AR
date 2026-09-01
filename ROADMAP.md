@@ -15,11 +15,11 @@
 
 | | |
 |---|---|
-| **Fase corrente** | 2 — AR no Android |
-| **Concluído** | **Fase 0** — cadeia de publicação validada em produção (`web-path-ar.pages.dev`), quatro rotas conferidas por `curl`. **Fase 1** — página de satélite completa, conteúdo vindo de JSON, validada em iPhone real (Safari) em 2026-08-31: modelo carrega, gira ao toque, página rola com gesto vertical, ficha e seções renderizadas |
-| **Adiantado de propósito** | Parte da Fase 3 (AR no iOS) já foi testada em iPhone real com o CubeSat, antes da ordem do roteiro — decisão deliberada para validar primeiro o risco técnico mais alto (ver [ADR-007](DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) e [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md)). Resultado: AR Quick Look, USDZ on-device e escala confirmados para este modelo. Isso não substitui a Fase 3 completa (falta o resto do acervo) nem a Fase 2 (AR no Android, ainda não testada) |
+| **Fase corrente** | 5 — Globo |
+| **Concluído** | **Fase 0** — cadeia de publicação validada em produção. **Fase 1** — página de satélite com conteúdo vindo de JSON, validada em iPhone real. **Fase 2** — AR implementado e validado em iPhone real (2026-09-01), fechada **parcialmente**: Android sem aparelho. **Fase 3** — cinco itens de verificação confirmados para os dois modelos do acervo. **Fase 4** — estados de erro, WebGL, progresso, `<noscript>` e aviso de navegador embutido, validados em iPhone real |
+| **Acervo** | 2 modelos: `cubesat` (146 KB, Draco, escala corrigida na página) e `acrimsat` (2,1 MB, sem Draco, tamanho nativo de 2,42 m). Ambos com AR validado em iPhone real |
 | **Bloqueios** | Nenhum |
-| **Pendências** | `poster.webp` do CubeSat (passo manual); **nenhum teste em Android até hoje**; ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
+| **Pendências** | `poster.webp` dos dois modelos (passo manual); **nenhum teste em Android até hoje** — bloqueia a decisão de escala do `CUBESAT_PILOT.md` §6.5; Teste 0 incompleto (falta QR pela câmera, WhatsApp e Chrome iOS); ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
 
 ---
 
@@ -223,14 +223,35 @@ exportador; restrição de animação.
 
 **Cobrir:**
 
-- [ ] Dispositivo sem suporte a AR → visualização 3D sem botão quebrado
-- [ ] Sem WebGL → mensagem clara, nunca tela branca
-- [ ] Modelo não carrega → estado de erro visível
-- [ ] Rede lenta → poster e indicação de progresso
-- [ ] **Navegador embutido no iOS → instrução para abrir no Safari**
+- [x] Dispositivo sem suporte a AR → o `<model-viewer>` esconde o botão
+      sozinho; a página explica o porquê em celular e cala no desktop, onde
+      a ausência é esperada
+- [x] Sem WebGL → visor removido e aviso claro; ficha e seções continuam
+- [x] Modelo não carrega → estado de erro visível, sem afirmar a causa
+- [x] Rede lenta → barra de progresso durante o download
+      *(o poster continua sendo débito D-06)*
+- [x] **Navegador embutido no iOS → instrução para abrir no Safari**
+- [x] Sem JavaScript → `<noscript>` explica, e o visor vazio é escondido
 
 **Critério de pronto:** nenhum cenário acima resulta em tela branca ou botão
 que não faz nada.
+
+**Validado por simulação (2026-09-01):**
+
+- 9 strings de `userAgent` reais conferidas — Safari iOS e iPad **não**
+  disparam o aviso; WhatsApp, Instagram, Chrome iOS e Firefox iOS disparam
+- JSON ausente → 404 → `resposta.ok` falso → estado de erro
+- GLB ausente → 404 → evento `error` do `<model-viewer>` → estado de erro
+
+**Validado em aparelho real pelo usuário (2026-09-01):**
+
+- [x] iPhone pelo Safari — nenhum aviso indevido
+- [x] link aberto pelo WhatsApp — aviso aparece e o 3D continua
+- [x] barra de progresso visível no ACRIMSAT em rede móvel
+
+**Decisão registrada:** o aviso de navegador embutido é o único ponto do
+projeto que usa `userAgent` em vez de detecção de capacidade. Ver
+[ADR-011](DECISIONS.md#adr-011--userAgent-apenas-para-o-aviso-de-ar-no-ios).
 
 **Aprendizado:** detecção de capacidade (não de navegador); degradação
 graciosa; design de estados de erro.

@@ -40,7 +40,7 @@ Abrir o exemplo oficial de AR do `<model-viewer>` (`modelviewer.dev`) no **Safar
 
 Repetir o mesmo link por caminhos diferentes de abertura:
 
-- [ ] Safari, digitando a URL
+- [X] Safari, digitando a URL
 - [ ] QR Code lido pelo app de Câmera do iPhone
 - [ ] Link aberto dentro do WhatsApp (navegador embutido)
 - [ ] Link aberto no Chrome para iOS
@@ -174,7 +174,7 @@ com botão de AR em português.
 
 **Critério de pronto (parcial, por plataforma):**
 
-- [ ] **iOS** — AR abre em iPhone real e ancora em superfície
+- [X] **iOS** — AR abre em iPhone real e ancora em superfície
 - [ ] **Android** — AR abre em Android real e ancora em superfície
       — **bloqueado: sem aparelho disponível**
 
@@ -199,11 +199,11 @@ modelo**, não só para o piloto.
 
 **Verificar, modelo a modelo:**
 
-- [ ] O botão de AR aparece
-- [ ] A cena abre (não trava em carregamento infinito)
-- [ ] A escala é pedagogicamente utilizável dentro de uma sala
-- [ ] Materiais e cores correspondem à visualização no navegador
-- [ ] Tempo entre toque e abertura é aceitável
+- [X] O botão de AR aparece
+- [X] A cena abre (não trava em carregamento infinito)
+- [X] A escala é pedagogicamente utilizável dentro de uma sala
+- [X] Materiais e cores correspondem à visualização no navegador
+- [X] Tempo entre toque e abertura é aceitável
 
 **Se um modelo falhar:** ele recebe `ios-src` pré-gerado. A decisão é revertida
 por exceção, não no todo.

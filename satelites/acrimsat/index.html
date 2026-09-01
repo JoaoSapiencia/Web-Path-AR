@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Active Cavity Irradiance Monitor Satellite  — Web Path AR</title>
+  <meta name="description" content="Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.">
+  <meta name="color-scheme" content="dark">
+
+  <link rel="stylesheet" href="/src/styles.css">
+
+  <!-- Versão exata, não faixa (^3.5.0): a biblioteca não deve mudar sozinha
+       entre uma aula e outra. Medido em 2026-08-31: 246 KB transferidos. -->
+  <script type="module"
+          src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
+  <script type="module" src="/src/satelite-page.js"></script>
+</head>
+
+<body data-slug="acrimsat">
+  <main class="pagina">
+    <a class="voltar" href="/">&larr; Início</a>
+
+    <!-- Título e resumo são estáticos: aparecem antes de qualquer JavaScript
+         rodar e sobrevivem a uma falha de rede no fetch. O texto canônico
+         vive em data/satelites/acrimsat.json; esta é uma cópia deliberada. -->
+    <h1>Active Cavity Irradiance Monitor Satellite</h1>
+    <p class="resumo">
+      Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.
+    </p>
+
+    <!-- O <model-viewer> é inserido aqui pelo JavaScript. A caixa já ocupa
+         o espaço via aspect-ratio no CSS, então o texto abaixo não salta
+         quando o modelo aparece. -->
+    <div class="visor" id="visor"></div>
+    <p class="visor-legenda">
+      Arraste para girar. Modelo: NASA 3D Resources.
+    </p>
+
+    <p class="estado" id="erro" hidden></p>
+
+    <dl class="ficha" id="ficha"></dl>
+
+    <div id="secoes"></div>
+  </main>
+</body>
+</html>

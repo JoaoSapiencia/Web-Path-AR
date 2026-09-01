@@ -1,0 +1,39 @@
+{
+  "slug": "acrimsat",
+  "nome": "ACRIMSAT",
+  "resumo": "Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.",
+  "modelo": {
+    "arquivo": "acrimsat.glb",
+    "poster": null,
+    "escala": "0.048 0.048 0.048",
+    "alt": "Modelo tridimensional do satélite ACRIMSAT: um corpo amarelado com formato aproximadamente hexagonal, com painéis solares retangulares sustentados por hastes nas laterais e instrumentos científicos no topo.",
+    "credito": "NASA 3D Resources"
+  },
+  "ficha": [
+    { "rotulo": "Classe", "valor": "Satélite científico (Monitoramento solar)" },
+    { "rotulo": "Operador", "valor": "NASA / JPL" },
+    { "rotulo": "Dimensões", "valor": "77,5 × 77,5 × 66 cm (178 cm de envergadura)" },
+    { "rotulo": "Massa no lançamento", "valor": "115 kg" },
+    { "rotulo": "Lançamento", "valor": "20 de dezembro de 1999" },
+    { "rotulo": "Órbita típica", "valor": "Heliossíncrona, 683–727 km" }
+  ],
+  "secoes": [
+    {
+      "titulo": "O que é o ACRIMSAT",
+      "texto": "O ACRIMSAT (Active Cavity Radiometer Irradiance Monitor Satellite) foi um satélite projetado e operado pela NASA como parte do programa Earth Observing System (EOS). Carregando o instrumento ACRIM-3, o satélite foi construído com o único propósito de monitorar a Irradiância Solar Total, ou seja, medir a quantidade total de energia do Sol que alcança o topo da atmosfera terrestre."
+    },
+    {
+      "titulo": "A importância das medições",
+      "texto": "O Sol é o motor principal do sistema climático da Terra, mas a energia que ele emite não é constante. O instrumento a bordo do ACRIMSAT foi criado para detectar flutuações minúsculas, de cerca de 0,1%, que ocorrem durante o ciclo solar. Entender essa variação de energia de forma altamente precisa é essencial para os climatologistas conseguirem separar as mudanças climáticas naturais das alterações causadas pela atividade humana."
+    },
+    {
+      "titulo": "Como chegou à órbita",
+      "texto": "Diferentemente dos enormes observatórios espaciais do passado, o ACRIMSAT aproveitou a miniaturização da tecnologia. Sendo um satélite relativamente leve (115 kg) e focado em um único instrumento, ele não precisava de um lançamento exclusivo. Em dezembro de 1999, ele foi lançado ao espaço como carga secundária ('carona') a bordo de um foguete Taurus a partir da Base da Força Aérea de Vandenberg, o que reduziu drasticamente os custos da missão."
+    },
+    {
+      "titulo": "O legado da missão",
+      "texto": "O satélite foi planejado para ter uma vida útil de 5 anos, mas acabou superando amplamente as expectativas da agência. O ACRIMSAT operou ativamente por 14 anos, realizando medições constantes até a perda de contato em dezembro de 2013. Seus dados deram continuidade a um registro histórico iniciado na década de 1970, formando um banco de dados inestimável para a física solar, astrofísica e pesquisas climáticas modernas."
+    }
+  ],
+  "locais_relacionados": []
+}

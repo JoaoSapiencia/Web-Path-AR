@@ -206,7 +206,48 @@ ser bloqueado** — e aí um modelo que funciona na sua casa falha na escola.
 
 O CubeSat exige Draco; o ACRIMSAT não.
 
-### 8. A biblioteca não carregou
+### 8. O módulo JavaScript nem chegou a rodar
+
+**A pior variante, porque desliga o próprio tratamento de erro.**
+
+Se um módulo ES falha ao ser **instanciado** — import errado, arquivo
+inexistente, CDN fora do ar —, ele nunca executa. Todo `try/catch`,
+`addEventListener("error")` e estado de erro escrito lá dentro **não chega a
+existir**.
+
+Sintoma: página em branco ou preta, **sem nenhuma mensagem**, mesmo num
+projeto que trata erros com cuidado.
+
+**Aconteceu em 2026-09-01.** O globo usava:
+
+```js
+import maplibregl from ".../maplibre-gl.mjs";   // ERRADO
+```
+
+O MapLibre 6 exporta 85 nomes e **nenhum `export default`**. O import default
+quebra na instanciação. O correto:
+
+```js
+import * as maplibregl from ".../maplibre-gl.mjs";
+```
+
+**Como reconhecer:** se a página está muda *e* o projeto tem tratamento de
+erro que deveria ter aparecido, suspeite do carregamento do módulo antes de
+suspeitar da lógica dentro dele. O console mostra o erro; a página, não.
+
+**Como verificar um pacote antes de importar:**
+
+```bash
+curl -sL <url-do-modulo> | grep -oE "export\{[^}]*\}" | tail -1
+```
+
+Se não houver `as default` na lista, o import default vai quebrar.
+
+**Prevenção adotada:** a home tem um guarda em `<script>` clássico que, após
+12 segundos sem `<canvas>` dentro do contêiner do globo, exibe uma mensagem.
+Script clássico de propósito — ele roda mesmo quando o módulo falha.
+
+### 9. A biblioteca não carregou
 
 Se o `unpkg.com` estiver bloqueado ou fora do ar, o `<model-viewer>` nunca é
 registrado como custom element. A tag fica no DOM, inerte, sem erro visível.
@@ -214,13 +255,13 @@ registrado como custom element. A tag fica no DOM, inerte, sem erro visível.
 Sintoma: a área do visor fica vazia e o console não reclama do modelo — ele
 reclama do script, se reclamar.
 
-### 9. Sem WebGL
+### 10. Sem WebGL
 
 Aparelho antigo, GPU bloqueada, ou navegador com aceleração desligada. Nada
 3D funciona. É um risco já registrado no `ARCHITECTURE.md` §9, e o tratamento
 adequado é trabalho da Fase 4.
 
-### 10. Aberto por `file://`
+### 11. Aberto por `file://`
 
 Duplo clique no `index.html` em vez de servir por HTTP. Módulos ES não
 carregam, `fetch` é bloqueado, e caminhos absolutos apontam para a raiz do

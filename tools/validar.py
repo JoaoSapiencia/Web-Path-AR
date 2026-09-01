@@ -227,6 +227,95 @@ def listar(pasta: Path):
     return sorted(p.name for p in pasta.iterdir()) if pasta.is_dir() else []
 
 
+# Caixas geográficas de referência, para detectar coordenada invertida.
+# São grosseiras de propósito: servem para pegar erro grosso, não para
+# validar precisão.
+CAIXAS = {
+    "alcantara":            (-46, -3.5, -43, -1),
+    "barreira-do-inferno":  (-36, -7, -34, -5),
+    "kourou":               (-54, 4, -51, 6.5),
+    "cabo-canaveral":       (-82, 27, -79, 30),
+    "baikonur":             (61, 44, 65, 47),
+}
+
+
+def validar_geojson():
+    caminho = RAIZ / "data" / "locais.geojson"
+    if not caminho.exists():
+        return 0
+
+    try:
+        g = json.loads(caminho.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        erro(f"locais.geojson: não pôde ser lido — {e}")
+        return 0
+
+    if g.get("type") != "FeatureCollection":
+        erro("locais.geojson: o tipo raiz deve ser FeatureCollection")
+        return 0
+
+    tipos_validos = {"base-lancamento", "curso"}
+    vistos = set()
+    feicoes = g.get("features", [])
+
+    for f in feicoes:
+        props = f.get("properties", {})
+        slug = props.get("slug", "(sem slug)")
+
+        for campo in ("slug", "nome", "tipo", "resumo"):
+            if not props.get(campo):
+                erro(f"locais.geojson [{slug}]: falta a propriedade {campo!r}")
+
+        if props.get("tipo") not in tipos_validos:
+            erro(
+                f"locais.geojson [{slug}]: tipo {props.get('tipo')!r} não é "
+                f"um dos valores controlados {sorted(tipos_validos)}"
+            )
+
+        if slug in vistos:
+            erro(f"locais.geojson: slug {slug!r} aparece mais de uma vez")
+        vistos.add(slug)
+
+        if slug != slug.lower() or " " in slug or not slug.isascii():
+            erro(
+                f"locais.geojson [{slug}]: slug precisa ser minúsculo, sem "
+                f"espaço e sem acento — ele vira URL (ADR-002)"
+            )
+
+        coords = f.get("geometry", {}).get("coordinates")
+        if not (isinstance(coords, list) and len(coords) == 2):
+            erro(f"locais.geojson [{slug}]: coordinates deve ter 2 números")
+            continue
+
+        lon, lat = coords
+
+        # A ordem do GeoJSON é [longitude, latitude]. Inverter é o erro mais
+        # comum do mundo geoespacial, e o sintoma é um marcador no oceano.
+        if not (-180 <= lon <= 180):
+            erro(f"locais.geojson [{slug}]: longitude {lon} fora de -180..180")
+        if not (-90 <= lat <= 90):
+            erro(
+                f"locais.geojson [{slug}]: latitude {lat} fora de -90..90 — "
+                f"provável inversão: o GeoJSON usa [longitude, latitude]"
+            )
+            continue
+
+        # Um valor pode estar em faixa válida e ainda assim invertido: se
+        # trocar os dois ainda produz coordenada legal, só a caixa denuncia.
+        caixa = CAIXAS.get(slug)
+        if caixa:
+            oeste, sul, leste, norte = caixa
+            if not (oeste <= lon <= leste and sul <= lat <= norte):
+                trocado = oeste <= lat <= leste and sul <= lon <= norte
+                erro(
+                    f"locais.geojson [{slug}]: ponto ({lon}, {lat}) fora da "
+                    f"caixa esperada {caixa}"
+                    + (" — os valores parecem TROCADOS" if trocado else "")
+                )
+
+    return len(feicoes)
+
+
 def main():
     pasta = RAIZ / "data" / "satelites"
     arquivos = sorted(pasta.glob("*.json")) if pasta.is_dir() else []
@@ -238,6 +327,8 @@ def main():
     for caminho in arquivos:
         validar_satelite(caminho)
 
+    locais = validar_geojson()
+
     for a in avisos:
         print(f"  aviso  {a}")
     for p in problemas:
@@ -245,7 +336,7 @@ def main():
 
     print()
     print(
-        f"{len(arquivos)} satélite(s) verificado(s) — "
+        f"{len(arquivos)} satélite(s) e {locais} localidade(s) verificados — "
         f"{len(problemas)} erro(s), {len(avisos)} aviso(s)"
     )
     return 1 if problemas else 0

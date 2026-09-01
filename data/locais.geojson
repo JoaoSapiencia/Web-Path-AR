@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-44.396, -2.317] },
+      "properties": {
+        "slug": "alcantara",
+        "nome": "Centro de Lançamento de Alcântara",
+        "tipo": "base-lancamento",
+        "resumo": "Base de lançamento brasileira no Maranhão. Sua proximidade da linha do Equador é uma vantagem física real: a rotação da Terra empurra o foguete."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-35.158, -5.919] },
+      "properties": {
+        "slug": "barreira-do-inferno",
+        "nome": "Centro de Lançamento da Barreira do Inferno",
+        "tipo": "base-lancamento",
+        "resumo": "Primeira base de lançamento do Brasil, no Rio Grande do Norte, em operação desde 1965. Usada sobretudo para foguetes de sondagem."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-52.768, 5.239] },
+      "properties": {
+        "slug": "kourou",
+        "nome": "Centro Espacial de Kourou",
+        "tipo": "base-lancamento",
+        "resumo": "Porto espacial europeu na Guiana Francesa, a cerca de 5 graus do Equador. É de onde parte boa parte das missões da Agência Espacial Europeia."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.604, 28.585] },
+      "properties": {
+        "slug": "cabo-canaveral",
+        "nome": "Cabo Canaveral",
+        "tipo": "base-lancamento",
+        "resumo": "Complexo de lançamento na Flórida, Estados Unidos. De aqui partiram as missões Apollo, os ônibus espaciais e boa parte dos lançamentos atuais."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [63.342, 45.965] },
+      "properties": {
+        "slug": "baikonur",
+        "nome": "Cosmódromo de Baikonur",
+        "tipo": "base-lancamento",
+        "resumo": "No Cazaquistão, é o porto espacial mais antigo em atividade. De lá partiram o Sputnik, em 1957, e Yuri Gagarin, em 1961."
+      }
+    }
+  ]
+}

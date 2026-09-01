@@ -268,6 +268,35 @@ graciosa; design de estados de erro.
 **Critério de pronto:** os pontos aparecem nas coordenadas corretas e o globo
 é utilizável num celular.
 
+- [x] `data/locais.geojson` com 5 bases de lançamento
+- [x] `src/globo.js` — MapLibre 6.6.0 em projeção de globo, estilo `dark`
+      do OpenFreeMap
+- [x] `index.html` reescrito; deixa de ser o placeholder da Fase 0
+- [x] validação de coordenadas em `tools/validar.py`, incluindo detecção de
+      inversão lat/lon por caixa geográfica
+- [x] estados de erro: sem WebGL e falha ao carregar o estilo
+- [ ] **pontos nas coordenadas corretas e globo utilizável em celular real**
+
+**Medição (2026-09-01):** `maplibre-gl@6.6.0` = 294.520 bytes transferidos
+(~287 KB), mais 21 KB do estilo. Comparável ao `model-viewer` (246 KB) —
+ver `ARCHITECTURE.md` §7.
+
+**Acervo semeado:** Alcântara, Barreira do Inferno, Kourou, Cabo Canaveral e
+Baikonur. Os locais de tipo `curso` dependem do usuário: só ele sabe onde as
+atividades aconteceram. Acrescentar um ponto é uma feição no GeoJSON.
+
+**Slugs propostos, sujeitos a revisão antes da Fase 9:** `alcantara`,
+`barreira-do-inferno`, `kourou`, `cabo-canaveral`, `baikonur`. Enquanto não
+houver página nem QR Code impresso, mudá-los é barato (ADR-002).
+
+**Sem link no popup, de propósito.** A página da localidade chega na Fase 6;
+um link para uma rota que devolve 404 seria pior que nenhum link.
+
+**A verificar em produção:** o `Content-Type` do `.geojson`. Servido
+localmente ele sai como `application/octet-stream`, porque o servidor do
+Python não conhece a extensão. O `response.json()` não checa o cabeçalho,
+então funciona — mas diferença entre local e host já custou caro na Fase 0.
+
 **Antecipado de propósito:** um globo com marcadores que ainda não levam a
 lugar nenhum já revela problemas de coordenadas, estilo e desempenho, sem
 depender do acervo de fotos estar pronto.
@@ -358,7 +387,14 @@ mínimo; ergonomia de impressão.
 Encontrados no checkpoint da Fase 1 (2026-08-31). Nenhum bloqueia a Fase 2.
 Registrados para não virarem descoberta cara depois.
 
-### D-01 — Tokens de cor duplicados em três arquivos
+### D-01 — Tokens de cor duplicados em três arquivos — **RESOLVIDO (2026-09-01)**
+
+Fechado na Fase 5, como previsto: o `index.html` foi reescrito para o globo
+e o `404.html` passou a carregar `src/styles.css`. As quatro páginas do
+projeto agora usam a mesma folha, e as cores existem num lugar só.
+
+<details><summary>Registro original</summary>
+
 
 `index.html`, `404.html` e `src/styles.css` cada um declara suas próprias
 cores em hexadecimal. Os mesmos cinco valores, três vezes.
@@ -372,6 +408,7 @@ página fora do padrão.
 **Quando corrigir:** Fase 5, quando o `index.html` virar o globo e for
 reescrito de qualquer forma. Corrigir antes seria mexer num arquivo que já
 está marcado para substituição.
+</details>
 
 ### D-02 — `modelo.credito` existe no JSON e não é usado
 

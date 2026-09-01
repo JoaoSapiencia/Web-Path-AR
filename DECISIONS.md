@@ -254,6 +254,36 @@ foram descontinuados). Sem bundler, o carregamento é via
 `<script type="module">` com import de CDN. Exemplos antigos com
 `<script src>` não funcionarão.
 
+**Armadilha confirmada em 2026-09-01 (v6.6.0):** o pacote ESM exporta 85
+nomes e **nenhum `export default`**.
+
+```js
+import maplibregl from "...maplibre-gl.mjs";      // ERRADO — quebra
+import * as maplibregl from "...maplibre-gl.mjs"; // certo
+```
+
+O import default falha na **instanciação** do módulo, antes de qualquer linha
+do arquivo rodar — então nenhum tratamento de erro escrito dentro dele chega
+a existir, e a página fica preta e muda. Muitos exemplos na internet usam
+import default porque são de versões anteriores.
+
+O pacote também é **dividido** em `maplibre-gl.mjs` e
+`maplibre-gl-shared.mjs`, com import relativo entre eles. Resolve a partir do
+CDN sem *import map*, mas é preciso que ambos estejam acessíveis.
+
+**Estilo base e ruído visual (2026-09-01).** O estilo `dark` do OpenFreeMap
+foi feito para navegação de rua: seus 15 rótulos de lugar têm `minzoom: 0` e
+poluem uma vista de globo inteiro. A correção não foi trocar de estilo — foi
+filtrar camadas em tempo de execução por **categoria** (`camada.type ===
+"symbol"`, prefixo do id), não por lista fixa de nomes, para sobreviver a uma
+reorganização futura do estilo. Ver `src/globo.js`, função
+`simplificarEstilo`.
+
+**A "atmosfera" do globo (`map.setSky()`) é opaca por decisão do motor** —
+não há `sky-opacity` nem `fog-opacity`. Um fundo CSS colocado atrás do
+`<canvas>` nunca apareceria; qualquer decoração adicional (como o campo de
+estrelas em `src/styles.css`) precisa ficar **sobre** o canvas, não atrás.
+
 ---
 
 ## ADR-009 — Conteúdo híbrido: casca estática, corpo em JSON

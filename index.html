@@ -4,84 +4,62 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Web Path AR</title>
-  <meta name="description" content="Aplicação educacional sobre satélites, missões e exploração espacial.">
+  <meta name="description" content="Satélites, missões e exploração espacial — material de apoio a aulas. Globo interativo com bases de lançamento.">
   <meta name="color-scheme" content="dark">
-  <style>
-    :root {
-      --fundo: #05070d;
-      --texto: #e8eaf0;
-      --secundario: #9aa3b8;
-      --borda: #1c2233;
-    }
 
-    * { box-sizing: border-box; }
+  <link rel="stylesheet" href="/src/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.6.0/dist/maplibre-gl.css">
 
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      background: var(--fundo);
-      color: var(--texto);
-      font-family: system-ui, -apple-system, sans-serif;
-      line-height: 1.6;
-    }
+  <script type="module" src="/src/globo.js"></script>
 
-    /* Mobile-first: o layout base é o de tela pequena.
-       Nenhuma media query aumenta a complexidade aqui ainda. */
-    main {
-      max-width: 40rem;
-      margin: 0 auto;
-      padding: 2rem 1.25rem;
-    }
+  <!-- Guarda de último recurso, em script CLÁSSICO de propósito: se o módulo
+       acima falhar ao ser avaliado (import errado, rede, CDN fora do ar), ele
+       nunca roda, e nenhum tratamento de erro escrito lá dentro chega a
+       existir. A página ficaria preta e muda.
 
-    h1 {
-      font-size: 1.75rem;
-      line-height: 1.2;
-      margin: 0 0 0.5rem;
-    }
+       O sinal observado é o DOM, não uma variável combinada: o MapLibre cria
+       um <canvas> dentro do contêiner. Sem canvas depois de 12 segundos,
+       alguma coisa falhou — não importa qual. -->
+  <script>
+    setTimeout(function () {
+      var area = document.querySelector("#globo");
+      var estado = document.querySelector("#estado");
+      if (!area || area.querySelector("canvas") || !estado.hidden) return;
+      estado.textContent =
+        "Não foi possível carregar o globo. As páginas dos satélites " +
+        "continuam acessíveis pelos QR Codes do material impresso.";
+      estado.className = "estado estado--erro";
+      estado.hidden = false;
+    }, 12000);
+  </script>
 
-    .subtitulo {
-      color: var(--secundario);
-      margin: 0 0 2rem;
-    }
-
-    .aviso {
-      border: 1px solid var(--borda);
-      border-radius: 0.5rem;
-      padding: 1rem 1.25rem;
-      color: var(--secundario);
-      font-size: 0.95rem;
-    }
-
-    .aviso h2 {
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--texto);
-      margin: 0 0 0.5rem;
-    }
-
-    a { color: #7fb2ff; }
-  </style>
+  <noscript>
+    <style>
+      /* Sem JavaScript o globo nunca é criado: esconder a área evita um
+         retângulo vazio ocupando a tela inteira. O campo de estrelas vive
+         no fundo deste mesmo elemento (ver styles.css), então some junto. */
+      .globo-area { display: none; }
+    </style>
+  </noscript>
 </head>
-<body>
-  <main>
-    <h1>Web Path AR</h1>
-    <p class="subtitulo">
-      Satélites, missões e exploração espacial — material de apoio a aulas.
-    </p>
 
-    <div class="aviso">
-      <h2>Fase 0 — Esqueleto ambulante</h2>
-      <p>
-        Esta página existe para validar a cadeia de publicação
-        (Git → GitHub → Cloudflare Pages → URL pública) antes de haver
-        qualquer código de mapa ou 3D para culpar por uma falha.
-      </p>
-      <p>
-        Na Fase 5 esta rota passa a renderizar o globo interativo
-        (ADR-003). Nada aqui é definitivo, exceto a URL.
-      </p>
-    </div>
-  </main>
+<body class="pagina-globo">
+  <!-- O cabeçalho fica SOBRE o globo, não acima dele: numa tela de celular,
+       cada pixel gasto com moldura é pixel a menos de planeta. -->
+  <header class="cabecalho-globo">
+    <h1>Web Path AR</h1>
+    <p>Bases de lançamento e locais de atividade</p>
+  </header>
+
+  <div class="globo-area" id="globo"></div>
+
+  <p class="estado" id="estado" role="status" aria-live="polite" hidden></p>
+
+  <noscript>
+    <p class="estado estado--aviso">
+      O globo interativo precisa de JavaScript. As páginas dos satélites
+      continuam acessíveis pelos QR Codes do material impresso.
+    </p>
+  </noscript>
 </body>
 </html>

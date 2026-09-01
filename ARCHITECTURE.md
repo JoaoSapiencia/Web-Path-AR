@@ -273,6 +273,9 @@ Otimização que não move um número do orçamento não entra.
 | GLB do CubeSat 1U | 149.424 bytes (~146 KB) | 2026-08-27 |
 | `model-viewer@3.5.0`, transferido | 252.390 bytes (~246 KB) | 2026-08-31 |
 | `model-viewer@3.5.0`, descomprimido | 935.194 bytes (~913 KB) | 2026-08-31 |
+| GLB do ACRIMSAT | 2.115.124 bytes (~2.065 KB) | 2026-09-01 |
+| `maplibre-gl@6.6.0`, transferido | 294.520 bytes (~287 KB) | 2026-09-01 |
+| Estilo `dark` do OpenFreeMap | 20.959 bytes (~20 KB) | 2026-09-01 |
 
 **Consequência para o orçamento:** numa página de satélite, a biblioteca
 pesa **1,7× o modelo 3D**. O orçamento de ≤3 MB por GLB está folgadíssimo
@@ -280,9 +283,17 @@ para este modelo; o custo dominante é o runtime 3D, que é fixo e igual para
 todas as páginas de satélite. Otimizar mais o GLB deste satélite não moveria
 número nenhum.
 
+**O peso do MapLibre (287 KB) é comparável ao do `model-viewer` (246 KB).**
+As duas páginas mais importantes do projeto custam praticamente o mesmo em
+biblioteca, e em ambas o runtime domina o orçamento — não os dados.
+
+A separação por página do ADR-001 é o que impede que se somem: quem abre um
+satélite não baixa MapLibre, e quem abre o globo não baixa `model-viewer`.
+Numa aplicação de página única, seriam 533 KB para qualquer visitante.
+
 **Ainda não medido:** o decodificador Draco (WASM), buscado à parte de um CDN
-do Google. O modelo exige `KHR_draco_mesh_compression`, então esse download
-está no caminho crítico e não aparece nos números acima.
+do Google; e os tiles vetoriais do globo, cujo volume depende de quanto o
+usuário navega.
 
 ---
 

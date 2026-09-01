@@ -101,6 +101,25 @@ button:focus-visible {
   letter-spacing: 0.01em;
 }
 
+/* Classificação da localidade, logo abaixo do título — "Base de lançamento"
+   ou "Local de atividade". Ocupa a mesma posição que .nome-completo ocupa na
+   página de satélite, e é lida do campo `tipo` do GeoJSON.
+
+   As cores repetem as da camada "locais-ponto" do globo (ver globo.js): o
+   mesmo azul para base de lançamento, o mesmo âmbar para atividade. Quem
+   clicou num ponto azul chega numa página com etiqueta azul. */
+.local-tipo {
+  display: inline-block;
+  margin: -0.25rem 0 1rem;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  color: var(--destaque);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .resumo {
   color: var(--secundario);
   font-size: 1.05rem;
@@ -394,10 +413,33 @@ model-viewer {
 .popup-local h2 {
   font-size: 1rem;
   margin: 0 0 0.35rem;
+  color: var(--secundario);
 }
 
 .popup-local p {
   margin: 0;
   font-size: 0.9rem;
   color: var(--secundario);
+}
+
+/* O link que fecha o ciclo globo -> localidade. Bloco, e não texto corrido,
+   porque num celular ele é um alvo de toque: precisa de área própria e de
+   uma altura confortável, não de um trecho sublinhado no meio do parágrafo. */
+.popup-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0;
+  color: var(--destaque);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.popup-link::after {
+  content: " 92";
+}
+
+.popup-link:hover,
+.popup-link:focus-visible {
+  text-decoration: underline;
 }

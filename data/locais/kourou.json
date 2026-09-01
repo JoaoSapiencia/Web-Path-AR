@@ -1,0 +1,37 @@
+{
+  "slug": "kourou",
+  "nome": "Centro Espacial de Kourou",
+  "tipo": "base-lancamento",
+  "coordenadas": [-52.768, 5.239],
+  "resumo": "Porto espacial europeu na Guiana Francesa, a cerca de 5 graus do Equador. É de onde parte boa parte das missões da Agência Espacial Europeia.",
+  "ficha": [
+    { "rotulo": "Também chamado", "valor": "Centro Espacial da Guiana (CSG)" },
+    { "rotulo": "País", "valor": "França (Guiana Francesa)" },
+    { "rotulo": "Onde fica", "valor": "Kourou, litoral norte da América do Sul" },
+    { "rotulo": "Latitude", "valor": "5,2° Norte" },
+    { "rotulo": "Impulso da rotação", "valor": "cerca de 463 m/s" },
+    { "rotulo": "Operadores", "valor": "CNES, Agência Espacial Europeia e Arianespace" },
+    { "rotulo": "Em operação desde", "valor": "1968" }
+  ],
+  "secoes": [
+    {
+      "titulo": "Uma base europeia na América do Sul",
+      "texto": "Kourou fica na Guiana Francesa, no litoral norte da América do Sul, a poucos graus do Equador — e é, para todos os efeitos, o porto espacial da Europa. A explicação está na física, não na política: nenhum ponto do território europeu continental chega perto do Equador, e a Guiana Francesa é território francês. Ao escolher lançar de lá, a Europa comprou a vantagem equatorial que a sua própria geografia não oferece. É o mesmo cálculo que fez o Brasil investir em Alcântara, resolvido por um caminho diferente."
+    },
+    {
+      "titulo": "Vizinha de Alcântara no que importa",
+      "texto": "Compare no globo desta página: Kourou está a 5,2 graus ao norte do Equador e Alcântara a 2,3 graus ao sul. As duas ficam no mesmo trecho de costa atlântica da América do Sul, separadas por pouco mais de mil quilômetros, e as duas lançam para leste sobre o oceano. Do ponto de vista da física do lançamento, elas competem quase que pela mesma vaga. Alcântara é, em latitude, ainda um pouco melhor posicionada — o que costuma aparecer no debate sobre por que o Brasil busca atrair lançamentos comerciais."
+    },
+    {
+      "titulo": "O que parte de lá",
+      "texto": "Kourou é a casa da família de foguetes Ariane, o principal lançador pesado europeu, e do Vega, um lançador menor pensado para cargas pequenas. Durante alguns anos, foguetes russos Soyuz também foram lançados de lá, a partir de uma plataforma construída especialmente para eles — um arranjo encerrado em 2022. O Ariane 5 encerrou sua carreira em 2023, depois de mais de duas décadas em serviço, e foi substituído pelo Ariane 6, cujo primeiro voo aconteceu em julho de 2024."
+    },
+    {
+      "titulo": "Por que tantas cargas caras saem daqui",
+      "texto": "Satélites de telecomunicações costumam ir para a órbita geoestacionária, um anel a cerca de 36 mil quilômetros de altitude, diretamente sobre o Equador, onde o satélite dá uma volta na Terra exatamente no tempo em que a Terra gira uma vez — e por isso parece parado no céu. Chegar a essa órbita a partir de uma base em latitude alta exige gastar combustível para corrigir o plano da trajetória. Saindo de perto do Equador, essa correção é quase desnecessária. O combustível economizado vira massa de satélite ou anos a mais de vida útil, e isso vale muito dinheiro."
+    }
+  ],
+  "fotos": [],
+  "data_atividade": null,
+  "satelites_relacionados": []
+}

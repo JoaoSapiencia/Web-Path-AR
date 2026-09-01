@@ -1,0 +1,38 @@
+{
+  "slug": "barreira-do-inferno",
+  "nome": "Centro de Lançamento da Barreira do Inferno",
+  "tipo": "base-lancamento",
+  "coordenadas": [-35.158, -5.919],
+  "resumo": "Primeira base de lançamento do Brasil, no Rio Grande do Norte, em operação desde 1965. Usada sobretudo para foguetes de sondagem.",
+  "ficha": [
+    { "rotulo": "Sigla", "valor": "CLBI" },
+    { "rotulo": "País", "valor": "Brasil" },
+    { "rotulo": "Onde fica", "valor": "Parnamirim, Rio Grande do Norte" },
+    { "rotulo": "Latitude", "valor": "5,9° Sul" },
+    { "rotulo": "Impulso da rotação", "valor": "cerca de 463 m/s" },
+    { "rotulo": "Operador", "valor": "Força Aérea Brasileira" },
+    { "rotulo": "Em operação desde", "valor": "1965" },
+    { "rotulo": "Primeiro lançamento", "valor": "15 de dezembro de 1965" }
+  ],
+  "secoes": [
+    {
+      "titulo": "A primeira base brasileira",
+      "texto": "Antes de Alcântara existir, foi aqui que o Brasil aprendeu a lançar foguetes. O centro entrou em operação em 1965, no litoral do Rio Grande do Norte, e o primeiro lançamento aconteceu em 15 de dezembro daquele ano, com um foguete de sondagem Nike-Apache. É a instalação de lançamento mais antiga em atividade no país, e boa parte da experiência técnica que tornou Alcântara possível foi acumulada aqui primeiro."
+    },
+    {
+      "titulo": "De onde vem o nome",
+      "texto": "O nome não é do programa espacial: é da geografia local. O trecho de costa onde a base foi instalada é marcado por falésias de tom avermelhado, chamadas barreiras, que os navegantes antigos associavam a um lugar difícil e perigoso de contornar. A base herdou o topônimo que já existia. É um bom lembrete de que instalações técnicas costumam ser batizadas pelo lugar, e não o contrário."
+    },
+    {
+      "titulo": "Foguete de sondagem não é lançador de satélite",
+      "texto": "A Barreira do Inferno é usada principalmente para foguetes de sondagem, e a diferença em relação a um lançador de satélite é grande. Um foguete de sondagem sobe alto, atravessa camadas da atmosfera coletando dados durante alguns minutos e volta a cair — ele nunca chega a entrar em órbita. Entrar em órbita não é uma questão de subir mais: é uma questão de andar de lado rápido o bastante para que, ao cair, você erre a Terra. É por isso que um foguete de sondagem pode ser muito menor e muito mais barato do que um lançador orbital, mesmo alcançando altitudes que parecem espaciais."
+    },
+    {
+      "titulo": "O que a base faz além de lançar",
+      "texto": "Uma parte importante do trabalho do CLBI não é lançar nada. A instalação opera radares de rastreio e estações de telemetria, que acompanham veículos lançados de outros lugares enquanto eles passam pela região. Rastrear é serviço prestado a missões de terceiros e é uma capacidade valiosa por si só: um lançamento só é aproveitável se alguém estiver medindo, do solo, onde o veículo realmente está e o que está acontecendo a bordo."
+    }
+  ],
+  "fotos": [],
+  "data_atividade": null,
+  "satelites_relacionados": []
+}

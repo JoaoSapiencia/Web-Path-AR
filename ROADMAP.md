@@ -13,13 +13,12 @@
 
 ## Estado atual
 
-| | |
-|---|---|
-| **Fase corrente** | 5 — Globo |
-| **Concluído** | **Fase 0** — cadeia de publicação validada em produção. **Fase 1** — página de satélite com conteúdo vindo de JSON, validada em iPhone real. **Fase 2** — AR implementado e validado em iPhone real (2026-09-01), fechada **parcialmente**: Android sem aparelho. **Fase 3** — cinco itens de verificação confirmados para os dois modelos do acervo. **Fase 4** — estados de erro, WebGL, progresso, `<noscript>` e aviso de navegador embutido, validados em iPhone real |
-| **Acervo** | 2 modelos: `cubesat` (146 KB, Draco, escala corrigida na página) e `acrimsat` (2,1 MB, sem Draco, tamanho nativo de 2,42 m). Ambos com AR validado em iPhone real |
-| **Bloqueios** | Nenhum |
-| **Pendências** | `poster.webp` dos dois modelos (passo manual); **nenhum teste em Android até hoje** — bloqueia a decisão de escala do `CUBESAT_PILOT.md` §6.5; Teste 0 incompleto (falta QR pela câmera, WhatsApp e Chrome iOS); ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
+**O estado geral do projeto vive em [PROGRESS.md](PROGRESS.md)**, criado na
+Fase 6. Ele responde "onde estamos"; este arquivo responde "para onde vamos
+e por quê".
+
+A tabela que ficava aqui repetia o mesmo conteúdo, e o projeto já pagou caro
+por dado duplicado sem quem o conferisse (D-01, D-03, ADR-004). Um lugar só.
 
 ---
 
@@ -275,7 +274,7 @@ graciosa; design de estados de erro.
 - [x] validação de coordenadas em `tools/validar.py`, incluindo detecção de
       inversão lat/lon por caixa geográfica
 - [x] estados de erro: sem WebGL e falha ao carregar o estilo
-- [ ] **pontos nas coordenadas corretas e globo utilizável em celular real**
+- [X] **pontos nas coordenadas corretas e globo utilizável em celular real**
 
 **Medição (2026-09-01):** `maplibre-gl@6.6.0` = 294.520 bytes transferidos
 (~287 KB), mais 21 KB do estilo. Comparável ao `model-viewer` (246 KB) —
@@ -311,15 +310,59 @@ distribuição ESM sem bundler.
 
 ## Fase 6 — Páginas de localidade e pipeline de imagens
 
-**Objetivo:** conectar o globo ao conteúdo e resolver o maior peso do projeto.
+> **Dividida em 2026-09-01.** A fase original juntava duas coisas com
+> dependências diferentes: as páginas dependem só de código, a galeria
+> depende de fotos que ainda não existem. Manter as duas juntas travaria a
+> navegação do globo atrás de um acervo fotográfico que ninguém tirou ainda
+> — o mesmo erro que a Fase 2 já tinha cometido ao travar a implementação
+> atrás de um aparelho Android.
 
-**Entrega:** `/locais/<slug>/`, pipeline de otimização de imagens em `tools/`,
-lazy loading da galeria.
+### Fase 6a — Páginas de localidade — **CONCLUÍDA (2026-09-01)**
 
-**Critério de pronto:** as 15 localidades acessíveis pelo globo, com fotos
-abaixo de 150 KB cada.
+**Objetivo:** conectar o globo ao conteúdo.
 
-**Atenção:** as fotos, não os modelos 3D, são o maior peso potencial do acervo.
+- [x] D-03 pago: schema de localidade usa `resumo`, não `descricao`
+- [x] `data/locais/<slug>.json` para as 5 bases de lançamento
+- [x] `src/local-page.js` — ficha e seções a partir do JSON
+- [x] `locais/<slug>/index.html` × 5, casca estática pelo ADR-009
+- [x] link no popup do globo — o que a Fase 5 deixou pendente de propósito
+- [x] `tools/validar.py` cruza `locais.geojson` com `data/locais/<slug>.json`,
+      cumprindo a mitigação que o ADR-004 prometeu
+- [ ] **aberto num celular real**
+
+**Critério de pronto:** o globo leva a uma página de localidade legível num
+celular, e nenhum ponto do mapa gera link para 404.
+**Atendido em servidor local; falta o celular real.**
+
+**Medição:** página de localidade completa = 20.286 bytes (~19,8 KB), somando
+HTML, CSS, JS e JSON, sem nenhuma biblioteca externa. Cabe 12 vezes dentro
+do `model-viewer` sozinho. Ver `ARCHITECTURE.md` §7.
+
+**Decisão de schema:** `ficha` foi acrescentada ao schema de localidade, que
+não a previa. Registrada em `ARCHITECTURE.md` §4.2 — é acréscimo, e não
+mereceu ADR próprio.
+
+**Acervo:** 5 bases. As 15 localidades do critério original supunham os
+locais de tipo `curso`, que dependem do usuário — só ele sabe onde as
+atividades aconteceram. Acrescentar um ponto é uma feição no GeoJSON, um
+JSON e um HTML.
+
+### Fase 6b — Pipeline de imagens — **BLOQUEADA**
+
+**Bloqueio:** não existem fotos. O pipeline não tem como ser validado sem
+material real.
+
+**Objetivo:** resolver o maior peso potencial do projeto.
+
+**Entrega:** pipeline de otimização em `tools/`, galeria com lazy loading,
+`fotos` deixando de ser um array vazio.
+
+**Critério de pronto:** fotos abaixo de 150 KB cada, sem deslocamento de
+layout ao carregar.
+
+**Atenção:** as fotos, não os modelos 3D, são o maior peso potencial do
+acervo. 15 localidades × ~5 fotos de 4 MB ≈ 300–400 MB de originais, que
+pelo ADR-005 ficam **fora** do repositório.
 
 **Aprendizado:** WebP; imagens responsivas; lazy loading; `width`/`height` para
 evitar deslocamento de layout; pipeline de assets.
@@ -427,7 +470,21 @@ vai esquecer de trocar — atribuindo à NASA um modelo que não é dela.
 **Quando corrigir:** Fase 7, ao adicionar o segundo satélite, que é
 exatamente quando o problema aparece. Ou antes, é uma linha.
 
-### D-03 — Texto curto tem nome diferente nos dois schemas
+### D-03 — Texto curto tem nome diferente nos dois schemas — **RESOLVIDO (2026-09-01)**
+
+Fechado na Fase 6a, exatamente na janela prevista: **antes** de existir a
+primeira localidade. O schema de localidade passou a usar `resumo`, igual ao
+do satélite.
+
+O custo real foi editar `ARCHITECTURE.md` §4.2 e §4.4 — nenhum dado precisou
+migrar, porque `data/locais/` ainda não existia e o `locais.geojson` já usava
+`resumo` desde a Fase 5. Se a correção tivesse esperado, seriam 15 arquivos.
+
+**A lição vale mais que a correção:** o débito não foi barato por sorte. Ele
+foi barato porque estava datado — o registro dizia *quando* corrigir, e a
+data era anterior ao ponto em que o custo subiria.
+
+<details><summary>Registro original</summary>
 
 Localidade usa `descricao`; satélite usa `resumo`. O `ARCHITECTURE.md` §4.3
 promete "mesma forma simétrica".
@@ -435,6 +492,7 @@ promete "mesma forma simétrica".
 **Quando corrigir:** Fase 6, antes de a primeira localidade existir. Enquanto
 só um lado está implementado, renomear é editar um arquivo. Depois de 15
 localidades, é migração de schema.
+</details>
 
 ### D-04 — Nenhum satélite é alcançável por navegação
 
@@ -446,6 +504,12 @@ indexa localidades, não satélites.
 
 **É uma pergunta em aberto:** como alguém descobre um satélite sem ter o
 papel impresso na mão? O `ROADMAP.md` não responde isso em nenhuma fase.
+
+**Atualização (Fase 6a):** as *localidades* deixaram de ter esse problema —
+o globo agora leva a elas. Os satélites continuam sem porta de entrada.
+O caminho previsto é `locais_relacionados` / `satelites_relacionados`
+(ADR-004), que ligaria uma base de lançamento aos satélites que partiram de
+lá — mas os dois campos seguem previstos e vazios, e nenhuma fase os agenda.
 
 ### D-05 — Decodificador Draco nunca medido
 
@@ -465,6 +529,25 @@ consome `modelo.poster` quando o campo não é `null`.
 
 **Quando corrigir:** oportunisticamente. Exige renderizar a cena — passo
 manual.
+
+### D-07 — `local-page.js` e `satelite-page.js` duplicam quatro funções
+
+`elemento()`, `mostrarEstado()`, `montarFicha()` e `montarSecoes()` existem,
+idênticas, nos dois módulos de página. São ~45 linhas repetidas.
+
+**A duplicação foi deliberada, não descuido.** Extrair um módulo comum
+obrigaria a alterar `satelite-page.js`, que está validado em iPhone real,
+para resolver um problema de manutenção que ainda não custou nada. Mexer num
+arquivo validado por elegância é o tipo de troca que a Fase 4 existiu para
+evitar.
+
+**Risco real:** corrigir um comportamento de estado de erro em um arquivo e
+esquecer o outro. Com dois módulos ainda é gerenciável; com quatro, não.
+
+**Quando corrigir:** Fase 7. É a fase cujo critério de pronto é justamente
+"adicionar um satélite não exigiu alterar código compartilhado" — se a
+extração for feita lá, ela é medida pelo próprio critério da fase, em vez de
+ser mais uma refatoração sem teste.
 
 ---
 

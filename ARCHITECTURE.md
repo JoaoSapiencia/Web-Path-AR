@@ -41,9 +41,18 @@ A aplicação tem três tipos de página, e cada tipo carrega **apenas** o que p
 
 ### 2.3 Página de localidade (`/locais/<slug>/`)
 
-- Conteúdo textual + galeria de fotos otimizadas.
+- Conteúdo textual + ficha + galeria de fotos otimizadas.
 - Consome `data/locais/<slug>.json`.
 - **Não carrega MapLibre nem `<model-viewer>`.**
+
+Implementada na Fase 6 para as 5 bases de lançamento. A galeria de fotos é a
+Fase 6b e depende de fotos que ainda não existem; o campo `fotos` já está no
+schema, vazio.
+
+É a página mais leve do projeto — **19,8 KB somando HTML, CSS, JS e JSON, sem
+nenhuma biblioteca externa**. Essa leveza não é otimização: é consequência
+direta da regra acima. `tools/validar.py` falha se uma página de localidade
+passar a carregar qualquer uma das duas bibliotecas.
 
 ### Consequência
 
@@ -135,10 +144,11 @@ Consumida apenas pela página da localidade.
   "slug": "alcantara",
   "nome": "Centro de Lançamento de Alcântara",
   "tipo": "base-lancamento",
-  "coordenadas": [-44.40, -2.37],
-  "descricao": "...",
+  "coordenadas": [-44.396, -2.317],
+  "resumo": "Base de lançamento brasileira no Maranhão. ...",
+  "ficha": [{ "rotulo": "Latitude", "valor": "2,3° Sul" }],
   "secoes": [{ "titulo": "...", "texto": "..." }],
-  "fotos": [{ "arquivo": "01.webp", "legenda": "...", "largura": 1200, "altura": 800 }],
+  "fotos": [],
   "data_atividade": null,
   "satelites_relacionados": []
 }
@@ -146,6 +156,26 @@ Consumida apenas pela página da localidade.
 
 `satelites_relacionados` está **previsto e vazio**. Nenhum código o consome
 hoje. Reservar o campo é barato; migrar o schema depois não é.
+
+`fotos` está **previsto e vazio** pela mesma razão. A galeria é a Fase 6b e
+depende de fotos que ainda não existem; `src/local-page.js` não lê o campo.
+
+**`resumo`, e não `descricao`** (mudança da Fase 6). O schema planejado
+usava `descricao`, que divergia do `resumo` do lado do satélite. Era o
+débito D-03, e foi pago no momento certo: antes de existir a primeira
+localidade, renomear é editar um documento; depois de quinze, é migração.
+O `locais.geojson` já usava `resumo` desde a Fase 5, então nenhum dado
+precisou mudar.
+
+**`ficha` acrescentada na Fase 6.** Não estava no schema planejado. Uma base
+de lançamento sem latitude, operador e ano de operação é pedagogicamente
+pobre, e a `ficha` é justamente o campo que faltava para os dois schemas
+serem simétricos (§4.4). É acréscimo, não quebra.
+
+`nome`, `tipo` e `resumo` existem **também** no `locais.geojson`. É a
+duplicação que o ADR-004 aceitou conscientemente, e a mitigação que ele
+prometeu existe desde a Fase 6: `tools/validar.py` compara os dois arquivos
+campo a campo e falha se divergirem.
 
 ### 4.3 Satélites — `data/satelites/<slug>.json`
 
@@ -187,14 +217,21 @@ mesma operação previsível. Os campos comuns são:
 |---|---|---|
 | `slug` | sim | sim |
 | `nome` | sim | sim |
+| Texto curto | `resumo` | `resumo` |
+| `ficha` | sim | sim |
 | `secoes` | sim | sim |
 | Relação recíproca | `satelites_relacionados` | `locais_relacionados` |
-| Texto curto | `descricao` | **`resumo`** |
+| Específico do tipo | `tipo`, `coordenadas`, `fotos`, `data_atividade` | `modelo` |
 
-**Divergência conhecida:** o texto curto tem nomes diferentes nos dois lados.
-É débito registrado, não decisão — ver `ROADMAP.md`, "Débitos técnicos". A
-localidade ainda não foi implementada (Fase 6), então a correção é barata
-enquanto só existe um dos dois lados.
+**A simetria está completa desde a Fase 6.** Os cinco campos comuns têm o
+mesmo nome e o mesmo formato dos dois lados, e o que diverge diverge porque
+os objetos são de fato diferentes: uma localidade tem coordenadas e fotos,
+um satélite tem um modelo 3D.
+
+A consequência prática é a que se queria: **adicionar uma localidade e
+adicionar um satélite são a mesma operação** — um JSON, um HTML curto, e o
+`tools/validar.py` confere o resto. A Fase 7 testa essa promessa do lado do
+satélite.
 
 ---
 
@@ -216,10 +253,10 @@ enquanto só existe um dos dois lados.
 │   │                 poster.webp
 │   └── fotos/<slug>/01.webp
 ├── src/
-│   ├── globo.js
-│   ├── local-page.js
-│   ├── satelite-page.js
-│   └── styles.css
+│   ├── globo.js                  → só a home
+│   ├── local-page.js             → só as páginas de localidade
+│   ├── satelite-page.js          → só as páginas de satélite
+│   └── styles.css                → todas as páginas
 ├── tools/                        → scripts de otimização (modelos e imagens)
 └── docs/
 ```
@@ -276,6 +313,15 @@ Otimização que não move um número do orçamento não entra.
 | GLB do ACRIMSAT | 2.115.124 bytes (~2.065 KB) | 2026-09-01 |
 | `maplibre-gl@6.6.0`, transferido | 294.520 bytes (~287 KB) | 2026-09-01 |
 | Estilo `dark` do OpenFreeMap | 20.959 bytes (~20 KB) | 2026-09-01 |
+| Página de localidade completa | 20.286 bytes (~19,8 KB) | 2026-09-01 |
+
+A página de localidade é medida **inteira** — HTML + CSS + JS + JSON, sem
+comprimir — porque ela não tem biblioteca externa nenhuma para separar. Esse
+é o número que mostra o que a separação por página compra: **a página de
+localidade completa cabe 12 vezes dentro do `model-viewer` sozinho.**
+
+Numa aplicação de página única, ler sobre Alcântara custaria os 533 KB das
+duas bibliotecas somadas. Aqui custa 19,8 KB.
 
 **Consequência para o orçamento:** numa página de satélite, a biblioteca
 pesa **1,7× o modelo 3D**. O orçamento de ≤3 MB por GLB está folgadíssimo

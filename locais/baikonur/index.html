@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cosmódromo de Baikonur — Web Path AR</title>
+  <meta name="description" content="No Cazaquistão, é o porto espacial mais antigo em atividade. De lá partiram o Sputnik, em 1957, e Yuri Gagarin, em 1961.">
+  <meta name="color-scheme" content="dark">
+
+  <link rel="stylesheet" href="/src/styles.css">
+
+  <!-- Esta página NÃO carrega MapLibre nem <model-viewer>. É a página mais
+       leve do projeto, por decisão de arquitetura (ARCHITECTURE.md §2.3). -->
+  <script type="module" src="/src/local-page.js"></script>
+</head>
+
+<body data-slug="baikonur">
+  <main class="pagina">
+    <a class="voltar" href="/">&larr; Globo</a>
+
+    <!-- Título e resumo são estáticos: aparecem antes de qualquer JavaScript
+         rodar e sobrevivem a uma falha de rede no fetch. O texto canônico
+         vive em data/locais/baikonur.json; esta é uma cópia deliberada,
+         conferida por tools/validar.py (ADR-009). -->
+    <h1>Cosmódromo de Baikonur</h1>
+    <p class="local-tipo">Base de lançamento</p>
+    <p class="resumo">
+      No Cazaquistão, é o porto espacial mais antigo em atividade. De lá partiram o Sputnik, em 1957, e Yuri Gagarin, em 1961.
+    </p>
+
+    <noscript>
+      <p class="estado estado--aviso">
+        Esta página precisa de JavaScript para exibir a ficha e o conteúdo
+        completo. O texto acima continua legível.
+      </p>
+    </noscript>
+
+    <p class="estado" id="erro" role="status" aria-live="polite" hidden></p>
+
+    <dl class="ficha" id="ficha"></dl>
+
+    <div id="secoes"></div>
+  </main>
+</body>
+</html>

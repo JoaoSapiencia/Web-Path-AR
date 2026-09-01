@@ -1,0 +1,41 @@
+{
+  "slug": "alcantara",
+  "nome": "Centro de Lançamento de Alcântara",
+  "tipo": "base-lancamento",
+  "coordenadas": [-44.396, -2.317],
+  "resumo": "Base de lançamento brasileira no Maranhão. Sua proximidade da linha do Equador é uma vantagem física real: a rotação da Terra empurra o foguete.",
+  "ficha": [
+    { "rotulo": "Sigla", "valor": "CLA" },
+    { "rotulo": "País", "valor": "Brasil" },
+    { "rotulo": "Onde fica", "valor": "Alcântara, Maranhão" },
+    { "rotulo": "Latitude", "valor": "2,3° Sul" },
+    { "rotulo": "Impulso da rotação", "valor": "cerca de 465 m/s" },
+    { "rotulo": "Operador", "valor": "Força Aérea Brasileira" },
+    { "rotulo": "Em operação desde", "valor": "1983" }
+  ],
+  "secoes": [
+    {
+      "titulo": "Por que uma base tão perto do Equador",
+      "texto": "A Terra gira, e quem está sobre ela gira junto. Um ponto no Equador se desloca para o leste a cerca de 465 metros por segundo — mais de 1.600 km/h — sem que ninguém sinta nada. Um foguete lançado para o leste já parte com essa velocidade de brinde: é velocidade que ele não precisa produzir queimando combustível. À medida que se afasta do Equador, essa ajuda diminui, porque o círculo que o ponto percorre em um dia fica menor. Alcântara está a 2,3 graus do Equador. É uma das bases de lançamento mais bem posicionadas do mundo nesse quesito, e essa é a razão técnica principal de ela existir onde existe."
+    },
+    {
+      "titulo": "A vantagem que não é sobre velocidade",
+      "texto": "Estar perto do Equador dá uma segunda vantagem, menos comentada e igualmente importante: a variedade de órbitas alcançáveis. Um foguete pode mudar o rumo depois de lançado, mas mudar o plano da órbita custa muito combustível. De uma base equatorial, quase qualquer inclinação de órbita fica ao alcance com um gasto razoável — inclusive a órbita equatorial, que é praticamente inviável a partir de bases em latitudes altas. Uma base longe do Equador é boa para certas órbitas; uma base sobre o Equador é boa para quase todas."
+    },
+    {
+      "titulo": "Uma base voltada para o mar",
+      "texto": "Olhe o mapa: Alcântara fica na costa, e o corredor de lançamento aponta para o Atlântico. Isso não é paisagem, é segurança. Todo foguete descarta estágios ao longo da subida, e esses estágios caem. Uma base precisa de milhares de quilômetros desimpedidos na direção do lançamento, e o oceano é o único lugar barato onde isso existe. É por essa razão que quase todas as grandes bases de lançamento do mundo ficam em litoral, e é uma das coisas mais fáceis de perceber olhando o globo desta página: procure onde estão os pontos e para onde eles apontam."
+    },
+    {
+      "titulo": "O acidente de 2003",
+      "texto": "Em 22 de agosto de 2003, três dias antes do lançamento previsto, o terceiro protótipo do foguete VLS-1 explodiu na plataforma durante os preparativos finais. Vinte e uma pessoas morreram, a maior parte da equipe técnica do programa espacial brasileiro. Foi a perda mais grave da história do setor no país, e atrasou o desenvolvimento do lançador nacional por muitos anos. É um episódio que costuma ser omitido em material introdutório, e não deveria: acesso ao espaço é uma atividade perigosa, e quem trabalha nela assume esse risco de verdade."
+    },
+    {
+      "titulo": "O território",
+      "texto": "A instalação da base, nos anos 1980, envolveu a desapropriação de terras ocupadas por comunidades quilombolas, que foram deslocadas para agrovilas afastadas do litoral onde viviam da pesca. A disputa sobre esse território seguiu ativa nas décadas seguintes e voltou ao debate público a cada proposta de expansão da base. É parte da história de Alcântara tanto quanto a latitude, e entender um centro de lançamento também é entender que ele ocupa um lugar onde já havia gente."
+    }
+  ],
+  "fotos": [],
+  "data_atividade": null,
+  "satelites_relacionados": []
+}

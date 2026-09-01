@@ -13,6 +13,7 @@ em automação depois.
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -240,22 +241,29 @@ CAIXAS = {
 
 
 def validar_geojson():
+    """Valida o GeoJSON e devolve (n_feicoes, indice_por_slug).
+
+    O indice existe porque o mesmo dado vive em dois arquivos por decisao
+    (ADR-004): o GeoJSON alimenta o globo, o JSON de localidade alimenta a
+    pagina. O ADR aceitou o risco de divergencia e prometeu esta mitigacao.
+    """
     caminho = RAIZ / "data" / "locais.geojson"
     if not caminho.exists():
-        return 0
+        return 0, {}
 
     try:
         g = json.loads(caminho.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, UnicodeDecodeError) as e:
         erro(f"locais.geojson: não pôde ser lido — {e}")
-        return 0
+        return 0, {}
 
     if g.get("type") != "FeatureCollection":
         erro("locais.geojson: o tipo raiz deve ser FeatureCollection")
-        return 0
+        return 0, {}
 
     tipos_validos = {"base-lancamento", "curso"}
     vistos = set()
+    indice = {}
     feicoes = g.get("features", [])
 
     for f in feicoes:
@@ -313,7 +321,123 @@ def validar_geojson():
                     + (" — os valores parecem TROCADOS" if trocado else "")
                 )
 
-    return len(feicoes)
+        indice[slug] = {
+            "nome": props.get("nome"),
+            "tipo": props.get("tipo"),
+            "resumo": props.get("resumo"),
+            "coordenadas": [lon, lat],
+        }
+
+    return len(feicoes), indice
+
+
+def validar_locais(indice):
+    """Confere as páginas de localidade contra o GeoJSON.
+
+    O globo agora leva a /locais/<slug>/. Essa navegação só é segura se todo
+    slug do GeoJSON tiver página e JSON — senão o mapa produz, em silêncio,
+    um link para 404. É a checagem que sustenta o link do popup.
+    """
+    pasta = RAIZ / "data" / "locais"
+    arquivos = sorted(pasta.glob("*.json")) if pasta.is_dir() else []
+    com_json = set()
+
+    for caminho in arquivos:
+        slug_arquivo = caminho.stem
+        com_json.add(slug_arquivo)
+
+        try:
+            dados = json.loads(caminho.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            erro(f"data/locais/{caminho.name}: JSON inválido — {e}")
+            continue
+        except UnicodeDecodeError as e:
+            erro(f"data/locais/{caminho.name}: não é UTF-8 válido — {e}")
+            continue
+
+        if dados.get("slug") != slug_arquivo:
+            erro(
+                f"data/locais/{caminho.name}: campo slug é "
+                f"{dados.get('slug')!r}, esperado {slug_arquivo!r}"
+            )
+
+        for campo in ("slug", "nome", "tipo", "coordenadas", "resumo",
+                      "ficha", "secoes", "fotos"):
+            if campo not in dados:
+                erro(f"locais/{slug_arquivo}: falta o campo obrigatório {campo!r}")
+
+        # --- a camada leve e a completa precisam concordar (ADR-004) ---
+        do_mapa = indice.get(slug_arquivo)
+        if do_mapa is None:
+            erro(
+                f"locais/{slug_arquivo}: existe data/locais/{slug_arquivo}.json "
+                f"mas nenhuma feição com esse slug no locais.geojson — a página "
+                f"nunca seria alcançada pelo globo"
+            )
+        else:
+            for campo in ("nome", "tipo", "resumo"):
+                if dados.get(campo) != do_mapa[campo]:
+                    erro(
+                        f"locais/{slug_arquivo}: {campo!r} diverge entre "
+                        f"locais.geojson e data/locais/{slug_arquivo}.json "
+                        f"(ADR-004)"
+                    )
+            coords = dados.get("coordenadas")
+            if not (isinstance(coords, list) and len(coords) == 2
+                    and all(abs(a - b) < 1e-9
+                            for a, b in zip(coords, do_mapa["coordenadas"]))):
+                erro(
+                    f"locais/{slug_arquivo}: coordenadas {coords} não batem "
+                    f"com as do locais.geojson {do_mapa['coordenadas']}"
+                )
+
+        # --- a página ---
+        pagina = RAIZ / "locais" / slug_arquivo / "index.html"
+        if not pagina.exists():
+            erro(f"locais/{slug_arquivo}: falta locais/{slug_arquivo}/index.html")
+            continue
+
+        html = pagina.read_text(encoding="utf-8")
+        if f'data-slug="{slug_arquivo}"' not in html:
+            erro(
+                f"locais/{slug_arquivo}/index.html: data-slug não é "
+                f'"{slug_arquivo}" — a página buscaria o JSON errado'
+            )
+        # ADR-009: nome e resumo são copiados de propósito para o HTML.
+        # Cópia deliberada precisa ser conferida, senão vira divergência.
+        for campo in ("nome", "resumo"):
+            valor = dados.get(campo)
+            if valor and valor not in html:
+                aviso(
+                    f"locais/{slug_arquivo}/index.html: o {campo} do HTML "
+                    f"não bate com o do JSON (ADR-009)"
+                )
+        # A página de localidade não carrega MapLibre nem model-viewer
+        # (ARCHITECTURE.md §2.3). É a única página do projeto sem biblioteca
+        # externa, e essa leveza é fácil de perder por copiar/colar.
+        #
+        # Os COMENTÁRIOS saem antes da checagem: a própria página explica, em
+        # comentário, que não carrega essas bibliotecas — e a primeira versão
+        # desta regra acusou justamente esse texto. Procurar uma string no
+        # HTML cru confunde o que a página FAZ com o que ela DIZ.
+        codigo = re.sub(r"<!--.*?-->", "", html, flags=re.DOTALL)
+        for proibido in ("maplibre", "model-viewer"):
+            if proibido in codigo:
+                erro(
+                    f"locais/{slug_arquivo}/index.html: carrega {proibido!r}, "
+                    f"que a página de localidade não deve carregar "
+                    f"(ARCHITECTURE.md §2.3)"
+                )
+
+    # --- o caminho inverso: ponto no mapa sem destino ---
+    for slug in sorted(set(indice) - com_json):
+        erro(
+            f"locais.geojson [{slug}]: o globo desenha este ponto e agora "
+            f"gera link para /locais/{slug}/, mas não existe "
+            f"data/locais/{slug}.json — o link daria 404"
+        )
+
+    return len(arquivos)
 
 
 def main():
@@ -327,7 +451,8 @@ def main():
     for caminho in arquivos:
         validar_satelite(caminho)
 
-    locais = validar_geojson()
+    n_geo, indice = validar_geojson()
+    n_paginas = validar_locais(indice)
 
     for a in avisos:
         print(f"  aviso  {a}")
@@ -336,7 +461,8 @@ def main():
 
     print()
     print(
-        f"{len(arquivos)} satélite(s) e {locais} localidade(s) verificados — "
+        f"{len(arquivos)} satélite(s), {n_geo} ponto(s) no globo e "
+        f"{n_paginas} página(s) de localidade verificados — "
         f"{len(problemas)} erro(s), {len(avisos)} aviso(s)"
     )
     return 1 if problemas else 0

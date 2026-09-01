@@ -1,0 +1,37 @@
+{
+  "slug": "baikonur",
+  "nome": "Cosmódromo de Baikonur",
+  "tipo": "base-lancamento",
+  "coordenadas": [63.342, 45.965],
+  "resumo": "No Cazaquistão, é o porto espacial mais antigo em atividade. De lá partiram o Sputnik, em 1957, e Yuri Gagarin, em 1961.",
+  "ficha": [
+    { "rotulo": "Onde fica", "valor": "Estepe do Cazaquistão" },
+    { "rotulo": "Situação", "valor": "Território cazaque, arrendado à Rússia" },
+    { "rotulo": "Latitude", "valor": "46,0° Norte" },
+    { "rotulo": "Impulso da rotação", "valor": "cerca de 323 m/s" },
+    { "rotulo": "Em operação desde", "valor": "1955" },
+    { "rotulo": "Lançamento do Sputnik 1", "valor": "4 de outubro de 1957" },
+    { "rotulo": "Voo de Yuri Gagarin", "valor": "12 de abril de 1961" }
+  ],
+  "secoes": [
+    {
+      "titulo": "Onde a era espacial começou",
+      "texto": "Em 4 de outubro de 1957, partiu daqui o Sputnik 1, o primeiro objeto construído por seres humanos a entrar em órbita da Terra. Menos de quatro anos depois, em 12 de abril de 1961, partiu do mesmo lugar a nave que levou Yuri Gagarin, o primeiro ser humano a orbitar o planeta. Baikonur é o porto espacial mais antigo ainda em atividade no mundo, e por várias décadas foi o único ponto de embarque para a Estação Espacial Internacional — inclusive para astronautas norte-americanos, no período entre a aposentadoria dos ônibus espaciais e a chegada das cápsulas comerciais."
+    },
+    {
+      "titulo": "Um nome que era um disfarce",
+      "texto": "A base não fica em Baikonur. A localidade que dá nome ao complexo está a mais de 300 quilômetros dali, e o nome foi adotado de propósito, nos anos 1950, para induzir a erro quem tentasse localizar a instalação a partir de anúncios oficiais. A base real fica perto de Tiuratam. O disfarce ficou obsoleto muito rápido, mas o nome pegou e nunca mais foi trocado — um resquício da Guerra Fria que sobrevive na cartografia até hoje."
+    },
+    {
+      "titulo": "A base que a física não escolheria",
+      "texto": "Baikonur está a 46 graus de latitude, e recebe cerca de 323 metros por segundo de impulso da rotação — bem menos que os 465 de uma base equatorial. Pior: fica no meio de um continente, e não em uma costa, o que significa que os estágios descartados caem em terra firme, sobre a estepe. Do ponto de vista puramente técnico, é uma localização ruim. Ela foi escolhida por outras razões — céu limpo, terreno plano, baixa densidade populacional e a necessidade de ficar longe de fronteiras vigiadas. É o exemplo mais claro do projeto de que a geografia de um centro de lançamento é sempre um acordo entre física, política e território disponível."
+    },
+    {
+      "titulo": "Uma base russa em outro país",
+      "texto": "Quando a União Soviética se dissolveu, em 1991, Baikonur ficou dentro das fronteiras do Cazaquistão, que passou a ser um país independente. A solução foi um contrato: a Rússia arrenda a base e a cidade ao redor, e as opera sob acordo com o governo cazaque. É uma situação incomum no mundo — uma infraestrutura estratégica de um país operando em território de outro por contrato de longo prazo — e uma consequência direta de a era espacial ter começado sob um mapa político que não existe mais."
+    }
+  ],
+  "fotos": [],
+  "data_atividade": null,
+  "satelites_relacionados": []
+}

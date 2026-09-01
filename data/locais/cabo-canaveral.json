@@ -1,0 +1,37 @@
+{
+  "slug": "cabo-canaveral",
+  "nome": "Cabo Canaveral",
+  "tipo": "base-lancamento",
+  "coordenadas": [-80.604, 28.585],
+  "resumo": "Complexo de lançamento na Flórida, Estados Unidos. De aqui partiram as missões Apollo, os ônibus espaciais e boa parte dos lançamentos atuais.",
+  "ficha": [
+    { "rotulo": "País", "valor": "Estados Unidos" },
+    { "rotulo": "Onde fica", "valor": "Costa leste da Flórida" },
+    { "rotulo": "Latitude", "valor": "28,5° Norte" },
+    { "rotulo": "Impulso da rotação", "valor": "cerca de 409 m/s" },
+    { "rotulo": "Duas instalações vizinhas", "valor": "Estação da Força Espacial e Centro Espacial Kennedy" },
+    { "rotulo": "Em operação desde", "valor": "1950" },
+    { "rotulo": "Lançamento da Apollo 11", "valor": "16 de julho de 1969" }
+  ],
+  "secoes": [
+    {
+      "titulo": "Não é um lugar só",
+      "texto": "O nome Cabo Canaveral é usado no dia a dia para uma coisa que na verdade são duas, lado a lado. A Estação da Força Espacial de Cabo Canaveral fica no cabo propriamente dito e é uma instalação militar, de onde saíram os voos dos programas Mercury e Gemini e de onde parte hoje a maior parte dos lançamentos comerciais. O Centro Espacial Kennedy fica na ilha vizinha, Merritt Island, é civil e pertence à NASA — é de lá, da plataforma 39A, que partiram os foguetes Saturno V das missões Apollo e, depois, os ônibus espaciais. Vistas do globo desta página, as duas se confundem em um ponto só; no chão, são separadas por um canal."
+    },
+    {
+      "titulo": "Por que a Flórida, e não o Equador",
+      "texto": "A 28,5 graus de latitude, Cabo Canaveral recebe cerca de 409 metros por segundo de impulso da rotação da Terra, contra os 465 de uma base equatorial. Perde-se algo, e o motivo de aceitar a perda é geográfico: é o ponto do território continental dos Estados Unidos que combina a menor latitude disponível com um oceano inteiro a leste para os estágios caírem. Nenhuma decisão sobre onde instalar uma base é puramente física — ela é sempre a melhor física possível dentro do território que se tem."
+    },
+    {
+      "titulo": "Um lugar onde a história ficou",
+      "texto": "A plataforma 39A é provavelmente a estrutura de lançamento mais fotografada do mundo. Dela partiu a Apollo 11 em 16 de julho de 1969, quatro dias antes de Neil Armstrong e Buzz Aldrin pousarem na Lua. A mesma plataforma foi reformada para os ônibus espaciais e, depois de 2011, arrendada a uma empresa privada, que a usa até hoje. É um exemplo raro de infraestrutura espacial que atravessou três eras tecnológicas sem ser demolida."
+    },
+    {
+      "titulo": "Lançar para leste, sempre",
+      "texto": "Olhe a orientação da costa da Flórida no globo: o Atlântico se abre exatamente na direção em que os foguetes precisam ir. Essa coincidência entre a direção do ganho de velocidade — para leste, no sentido da rotação — e a direção em que há mar desimpedido é a razão de tantas bases se concentrarem em costas leste de continentes. Alcântara, Kourou e Cabo Canaveral compartilham essa característica, e é algo que fica visível ao girar o globo desta página."
+    }
+  ],
+  "fotos": [],
+  "data_atividade": null,
+  "satelites_relacionados": []
+}

@@ -21,6 +21,15 @@ const ESTILO = "https://tiles.openfreemap.org/styles/dark";
 const alvo = document.querySelector("#globo");
 const estado = document.querySelector("#estado");
 
+/** Cria um elemento com texto. Evita innerHTML: o conteúdo vem de um
+ *  arquivo de dados e é tratado como texto, nunca como marcação. */
+function elemento(tag, texto, classe) {
+  const el = document.createElement(tag);
+  if (texto !== undefined) el.textContent = texto;
+  if (classe) el.className = classe;
+  return el;
+}
+
 function mostrarEstado(mensagem, tipo = "erro") {
   estado.textContent = mensagem;
   estado.className = `estado estado--${tipo}`;
@@ -245,23 +254,22 @@ function adicionarLocais(mapa) {
 
   mapa.on("click", "locais-ponto", (evento) => {
     const feicao = evento.features[0];
-    const { nome, resumo } = feicao.properties;
+    const { slug, nome, resumo } = feicao.properties;
 
     // O conteúdo do popup é montado com DOM, não com string de HTML:
     // o texto vem de um arquivo de dados e é tratado como texto.
-    const caixa = document.createElement("div");
-    caixa.className = "popup-local";
+    const caixa = elemento("div", undefined, "popup-local");
+    const titulo = elemento("h2", nome);
+    const texto = elemento("p", resumo);
 
-    const titulo = document.createElement("h2");
-    titulo.textContent = nome;
+    // O link para /locais/<slug>/ chegou na Fase 6. Ele só é seguro porque
+    // tools/validar.py garante que todo slug do GeoJSON tem página e JSON
+    // correspondentes — sem essa checagem, um ponto novo no mapa produziria
+    // silenciosamente um link para 404.
+    const link = elemento("a", "Ver esta localidade", "popup-link");
+    link.href = `/locais/${slug}/`;
 
-    const texto = document.createElement("p");
-    texto.textContent = resumo;
-
-    caixa.append(titulo, texto);
-
-    // A página da localidade chega na Fase 6. Até lá, não há link —
-    // um link para uma rota que devolve 404 seria pior que nenhum link.
+    caixa.append(titulo, texto, link);
 
     popup
       // Ancorar na coordenada da feição, e não no ponto do clique, evita

@@ -1,0 +1,193 @@
+/* Web Path AR — estilos compartilhados
+ *
+ * Mobile-first: as regras base descrevem a tela pequena.
+ * Media queries só ADICIONAM, nunca desfazem.
+ */
+
+:root {
+  --fundo: #05070d;
+  --superficie: #0c1018;
+  --texto: #e8eaf0;
+  --secundario: #9aa3b8;
+  --borda: #1c2233;
+  --destaque: #7fb2ff;
+
+  --largura-texto: 40rem;
+  --espaco: 1.25rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  /* Rolagem suave ao pular para âncoras, mas respeitando quem
+     pediu menos movimento nas preferências do sistema. */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.65;
+  /* Impede o iOS de aumentar a fonte ao girar o aparelho. */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- Tipografia ---------- */
+
+h1,
+h2 {
+  line-height: 1.2;
+  /* text-wrap: balance evita uma última linha com uma palavra só.
+     Onde não houver suporte, o título simplesmente quebra normal. */
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin: 2rem 0 0.5rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--destaque);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 3px;
+}
+
+/* ---------- Estrutura ---------- */
+
+.pagina {
+  max-width: var(--largura-texto);
+  margin: 0 auto;
+  padding: 1.5rem var(--espaco) 4rem;
+}
+
+.resumo {
+  color: var(--secundario);
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+}
+
+.voltar {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--secundario);
+  text-decoration: none;
+}
+
+.voltar:hover,
+.voltar:focus-visible {
+  color: var(--destaque);
+}
+
+/* ---------- Visualizador 3D ---------- */
+
+.visor {
+  /* Reserva o espaço ANTES de o modelo carregar.
+     Sem isso, o conteúdo abaixo salta quando o visor aparece. */
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  --poster-color: transparent;
+}
+
+.visor-legenda {
+  margin: 0.5rem 0 2rem;
+  font-size: 0.85rem;
+  color: var(--secundario);
+}
+
+/* ---------- Ficha técnica ---------- */
+
+.ficha {
+  margin: 0 0 2rem;
+  padding: 0;
+  border-top: 1px solid var(--borda);
+}
+
+.ficha div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--borda);
+}
+
+.ficha dt {
+  color: var(--secundario);
+  font-size: 0.9rem;
+}
+
+.ficha dd {
+  margin: 0;
+  text-align: right;
+}
+
+/* ---------- Estados ---------- */
+
+.estado {
+  border: 1px solid var(--borda);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  color: var(--secundario);
+  font-size: 0.95rem;
+}
+
+.estado[hidden] {
+  display: none;
+}
+
+/* ---------- Telas maiores ---------- */
+
+@media (min-width: 48rem) {
+  h1 {
+    font-size: 2.25rem;
+  }
+
+  .pagina {
+    padding-top: 3rem;
+  }
+
+  .visor {
+    aspect-ratio: 16 / 10;
+  }
+}

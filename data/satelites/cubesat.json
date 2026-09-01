@@ -1,0 +1,43 @@
+{
+  "slug": "cubesat",
+  "nome": "CubeSat 1U",
+  "resumo": "Um satélite do tamanho de um cubo de 10 centímetros. O padrão que tornou o espaço acessível a universidades e escolas.",
+  "modelo": {
+    "arquivo": "modelo.glb",
+    "poster": null,
+    "escala": "0.048 0.048 0.048",
+    "alt": "Modelo tridimensional de um CubeSat 1U genérico: um cubo com painéis solares nas faces laterais e uma antena fina projetando-se do corpo.",
+    "credito": "NASA 3D Resources"
+  },
+  "ficha": [
+    { "rotulo": "Classe", "valor": "Nanossatélite" },
+    { "rotulo": "Formato", "valor": "1U — uma unidade" },
+    { "rotulo": "Dimensões", "valor": "10 × 10 × 10 cm" },
+    { "rotulo": "Massa máxima", "valor": "1,33 kg" },
+    { "rotulo": "Padrão criado em", "valor": "1999" },
+    { "rotulo": "Órbita típica", "valor": "Baixa (LEO), 400–600 km" }
+  ],
+  "secoes": [
+    {
+      "titulo": "O que é um CubeSat",
+      "texto": "CubeSat não é o nome de um satélite específico — é um padrão de tamanho e formato. Qualquer satélite que respeite as medidas do padrão é um CubeSat, independentemente do que ele faça no espaço. A unidade básica, chamada 1U, é um cubo de 10 centímetros de lado com massa máxima de 1,33 kg. Satélites maiores são montados empilhando unidades: um 3U é uma barra de 10 × 10 × 30 cm."
+    },
+    {
+      "titulo": "Por que um padrão mudou tanta coisa",
+      "texto": "O padrão CubeSat foi proposto em 1999 por pesquisadores da California Polytechnic State University e da Universidade Stanford. O problema que eles queriam resolver não era técnico, era de custo e de acesso: cada satélite universitário era único, e cada lançamento exigia negociar um encaixe sob medida no foguete. Ao fixar tamanho, massa e interface de liberação, o padrão permitiu que os satélites virassem carga previsível. O foguete deixa de precisar se adaptar a cada satélite."
+    },
+    {
+      "titulo": "Como um CubeSat chega à órbita",
+      "texto": "CubeSats quase nunca têm um foguete só para eles. Eles viajam como carga secundária, aproveitando o espaço que sobra em lançamentos de satélites maiores, ou são levados até a Estação Espacial Internacional e liberados de lá. A liberação é feita por um dispositivo em forma de tubo, que funciona como um lançador de mola: o CubeSat é empurrado para fora e passa a orbitar por conta própria. Esse dispositivo é a razão de o padrão precisar ser rígido — o tubo é sempre o mesmo, então o satélite é que precisa caber."
+    },
+    {
+      "titulo": "Para que servem",
+      "texto": "Observação da Terra, medição do campo magnético, monitoramento de queimadas e de lavouras, radioamadorismo e teste de tecnologias novas antes de usá-las em satélites caros. Há também um uso que não é científico e nem por isso menor: formar gente. Construir um satélite que realmente vai ao espaço ensina engenharia de um jeito que nenhuma simulação ensina."
+    },
+    {
+      "titulo": "CubeSats brasileiros",
+      "texto": "O Brasil tem participação nessa história. O NanoSatC-Br1, primeiro nanossatélite brasileiro, foi um 1U desenvolvido pelo INPE em parceria com a Universidade Federal de Santa Maria e lançado em 2014, para estudar o campo magnético terrestre sobre a Anomalia Magnética do Atlântico Sul. Outros vieram depois, vindos de universidades e institutos de pesquisa do país."
+    }
+  ],
+  "locais_relacionados": []
+}

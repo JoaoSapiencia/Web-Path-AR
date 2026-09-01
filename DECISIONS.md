@@ -253,3 +253,103 @@ As versões recentes do MapLibre GL JS distribuem **apenas ESM** (bundles UMD
 foram descontinuados). Sem bundler, o carregamento é via
 `<script type="module">` com import de CDN. Exemplos antigos com
 `<script src>` não funcionarão.
+
+---
+
+## ADR-009 — Conteúdo híbrido: casca estática, corpo em JSON
+
+**Status:** Aceita
+
+**Contexto**
+A entrada principal do projeto é QR Code: carregamento a frio, direto na
+página final, frequentemente em rede escolar saturada — um risco já
+registrado no `ARCHITECTURE.md` §9. O ADR-001 aceitou como consequência que
+"conteúdo chega via JavaScript: há um instante de página vazia".
+
+A Fase 1 obrigava a decidir quanto desse instante é aceitável.
+
+**Decisão**
+- **No HTML estático:** `<title>`, `<h1>`, resumo curto e `<meta
+  name="description">`.
+- **No JSON:** ficha técnica, seções longas, e os parâmetros do modelo 3D
+  (arquivo, escala, texto alternativo).
+
+**Razão**
+Um aluno que aponta a câmera para o QR Code precisa ver imediatamente que
+chegou no lugar certo. Título e resumo no HTML pintam no primeiro frame, sem
+esperar `fetch`, e sobrevivem a uma falha de rede parcial: se o JSON não
+carregar, a página ainda diz do que se trata, em vez de ficar em branco.
+
+O conteúdo longo não tem essa urgência — ninguém lê a ficha técnica no
+primeiro segundo.
+
+**Alternativa descartada**
+Casca totalmente vazia, com até o título vindo do `fetch`. Cumpriria o
+critério original da Fase 1 ("o conteúdo textual vem do JSON") à risca, mas
+troca a robustez do primeiro paint por uma pureza que não entrega nada ao
+aluno.
+
+**Consequências**
+- (+) Primeiro conteúdo visível não depende de JavaScript nem de rede além
+  do próprio HTML.
+- (+) `<title>` e `description` reais para compartilhamento de link.
+- (−) **Título e resumo existem em dois lugares** — HTML e JSON — com risco
+  de divergência. É o mesmo risco que o ADR-004 já aceitou para o nome das
+  localidades, e a mitigação prevista é a mesma: script de validação em
+  `tools/`.
+- (=) O JSON permanece a fonte canônica. O JavaScript **não** sobrescreve o
+  título nem o resumo, para não causar troca de texto visível na tela.
+
+**Nota sobre o roteiro**
+Isso relaxa o critério de pronto da Fase 1 como escrito originalmente
+("o conteúdo textual vem do JSON, não do HTML"). O `ROADMAP.md` foi
+atualizado para refletir a decisão real.
+
+---
+
+## ADR-010 — Versão exata do `<model-viewer>`, servido por CDN
+
+**Status:** Aceita — reavaliar na Fase 8
+
+**Contexto**
+A página de satélite carrega o `<model-viewer>` do unpkg.com. A declaração
+original usava faixa de versão (`^3.5.0`), que resolve para a versão mais
+recente da linha 3.x a cada carregamento.
+
+Medição de 2026-08-31:
+
+| | |
+|---|---|
+| Transferido (comprimido) | 252.390 bytes (~246 KB) |
+| Descomprimido | 935.194 bytes (~913 KB) |
+
+A biblioteca pesa **1,7× o modelo 3D** (146 KB). O gargalo desta página não
+é o GLB.
+
+**Decisão**
+Fixar a versão exata (`@3.5.0`). Manter a entrega por CDN por enquanto.
+
+**Razão**
+Faixa de versão significa que a biblioteca pode mudar entre uma aula e a
+seguinte, sem nenhum commit no repositório. Para um projeto cujo teste de
+aceitação é "funcionou no iPhone", isso torna qualquer validação
+provisória.
+
+Trazer a cópia para o repositório é a decisão maior, e o `ROADMAP.md` manda
+medir antes de otimizar. A medição acima é o primeiro número; falta o custo
+real em rede móvel, que é a Fase 8.
+
+**Consequências**
+- (+) O que foi testado é o que roda.
+- (−) Dependência de terceiro no caminho crítico da aula permanece.
+- (−) Atualizações de segurança e correções passam a exigir ação manual.
+
+**Ponto ainda não medido**
+O modelo exige `KHR_draco_mesh_compression`, e o decodificador Draco (WASM)
+é buscado **à parte**, de um CDN do Google. Ele está no caminho crítico e
+não entrou nesta medição. Vendorizar apenas o `model-viewer` não removeria
+essa segunda dependência externa.
+
+**Reavaliar quando**
+Fase 8, com número de rede móvel real — ou antes, se o unpkg falhar em
+qualquer teste.

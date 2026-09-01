@@ -15,11 +15,11 @@
 
 | | |
 |---|---|
-| **Fase corrente** | 0 — Esqueleto ambulante |
-| **Concluído** | `ARCHITECTURE.md`, `DECISIONS.md`, `ROADMAP.md`, `README.md`, `.gitignore`, `index.html` e `404.html` no `main`; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`); cadeia Git → GitHub → Cloudflare Pages → URL pública exercitada via preview deployment na branch de teste |
+| **Fase corrente** | 1 — Primeiro satélite |
+| **Concluído** | **Fase 0** — cadeia Git → GitHub → Cloudflare Pages → URL pública validada em produção (`web-path-ar.pages.dev`), com as quatro rotas conferidas por `curl` em 2026-08-31; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`) |
 | **Adiantado de propósito** | Parte da Fase 3 (AR no iOS) já foi testada em iPhone real com o CubeSat, antes da ordem do roteiro — decisão deliberada para validar primeiro o risco técnico mais alto (ver [ADR-007](DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) e [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md)). Resultado: AR Quick Look, USDZ on-device e escala confirmados para este modelo. Isso não substitui a Fase 3 completa (falta o resto do acervo) nem a Fase 2 (AR no Android, ainda não testada) |
-| **Bloqueios** | Nenhum. **Em aberto (não bloqueante):** confirmar em deploy real que `/satelites/<slug>/` e o `.glb` são servidos corretamente — no teste de 2026-08-27 o Cloudflare Pages devolvia o mesmo HTML com status 200 para qualquer rota (CUBESAT_PILOT.md §7). O `404.html` recém-adicionado é a hipótese de correção, ainda não verificada. |
-| **Pendências** | Registro de ADR-009 (PWA); teste equivalente em Android real (Scene Viewer); domínio próprio (bloqueante só na Fase 9) |
+| **Bloqueios** | Nenhum |
+| **Pendências** | `poster.webp` do CubeSat (passo manual, ver Fase 1); teste equivalente em Android real (Scene Viewer); ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
 
 ---
 
@@ -70,18 +70,19 @@ enquanto ainda não há nada para culpar por uma falha.
 **Verificação em deploy real** (localhost não reproduz o roteamento do
 Cloudflare Pages — só o deploy é conclusivo):
 
-- [ ] `/` abre e mostra a página inicial
-- [ ] `/satelites/cubesat/` abre a página de teste, **não** a página inicial
-- [ ] `/assets/models/cubesat/modelo.glb` baixa o binário
-      (`Content-Type: model/gltf-binary`, ~146 KB), não HTML
-- [ ] uma rota inexistente devolve status **404**, não 200
-- [ ] os quatro itens acima conferidos também num celular real
+- [x] `/` abre e mostra a página inicial — 200, 2.108 bytes
+- [x] `/satelites/cubesat/` abre a página de satélite, **não** a página
+      inicial — 200, tamanho distinto
+- [x] `/assets/models/cubesat/modelo.glb` devolve o binário
+      (`model/gltf-binary`, 149.424 bytes), não HTML
+- [x] rota inexistente devolve status **404**, não 200
+- [X] conferido também num celular real
 
-O segundo, o terceiro e o quarto item são o motivo de esta fase ainda não
-estar fechada: no teste de 2026-08-27 todas as rotas devolviam o mesmo HTML
-com status 200 (CUBESAT_PILOT.md §7). Enquanto isso não for verificado, o
-contrato de URL do [ADR-002](DECISIONS.md#adr-002--urls-em-caminho-não-em-query-string)
-— que vai virar QR Code impresso — não está validado.
+**Verificado em 2026-08-31** em `web-path-ar.pages.dev`. O comportamento de
+"200 para tudo" de 2026-08-27 (CUBESAT_PILOT.md §7) não se reproduz mais, e
+o contrato de URL do [ADR-002](DECISIONS.md#adr-002--urls-em-caminho-não-em-query-string)
+está validado em produção. Duas mudanças entraram juntas (`404.html` e a
+remoção dos espaços do nome do GLB), então a causa não foi atribuída.
 
 **Não fazer:** dependências, diretórios de fases futuras, qualquer código de
 mapa ou 3D.
@@ -104,13 +105,41 @@ Cloudflare Pages; preview deployments por branch.
 JSON de conteúdo, CSS mobile-first.
 
 **Critério de pronto:** modelo carrega, gira e responde ao toque num celular
-real; o conteúdo textual vem do JSON, não do HTML.
+real; o conteúdo longo vem do JSON, não do HTML.
 
-**Decisão a tomar nesta fase:** quanto do conteúdo educacional fica no HTML e
-quanto vem do JSON.
+- [x] conteúdo em `data/satelites/cubesat.json`
+- [x] `src/satelite-page.js` monta ficha e seções a partir do JSON
+- [x] `src/styles.css` mobile-first
+- [x] rotas e tipos MIME conferidos em servidor local
+- [ ] **modelo carrega, gira e responde ao toque num celular real**
+- [ ] `poster.webp` gerado (passo manual — ver abaixo)
 
-**Medição obrigatória:** peso real do `<model-viewer>` no deploy. Este número
-entra no orçamento de performance — não usar estimativas de terceiros.
+**Decisão tomada nesta fase:** conteúdo híbrido — título e resumo no HTML
+estático, corpo em JSON. Registrada em
+[ADR-009](DECISIONS.md#adr-009--conteúdo-híbrido-casca-estática-corpo-em-json).
+Isso relaxa o critério original, que pedia *todo* o texto vindo do JSON; a
+razão está no ADR.
+
+**Medição obrigatória — feita em 2026-08-31:**
+
+| `@google/model-viewer@3.5.0` | |
+|---|---|
+| Transferido (comprimido) | 252.390 bytes (~246 KB) |
+| Descomprimido | 935.194 bytes (~913 KB) |
+
+A biblioteca pesa **1,7× o GLB** (146 KB). O gargalo desta página não é o
+modelo 3D. Versão fixada em exata por causa disso —
+[ADR-010](DECISIONS.md#adr-010--versão-exata-do-model-viewer-servido-por-cdn).
+
+**Ainda não medido:** o decodificador Draco (WASM), buscado à parte de um CDN
+do Google. O modelo exige Draco, então esse download está no caminho crítico.
+
+**Passo manual pendente — `poster.webp`:** a imagem que aparece enquanto o
+modelo carrega. Não foi gerada porque exige renderizar a cena. Receita:
+abrir a página, enquadrar o modelo, usar `model-viewer.toBlob()` pelo
+console ou uma captura de tela, recortar, converter para WebP em ≤50 KB e
+salvar em `assets/models/cubesat/poster.webp`. Depois preencher
+`modelo.poster` no JSON — o código já usa o campo se ele existir.
 
 **Aprendizado:** HTML semântico; CSS mobile-first; módulos ES; Web Components;
 `fetch` e JSON; glTF vs GLB; pipeline de modelos (Blender, glTF Transform);

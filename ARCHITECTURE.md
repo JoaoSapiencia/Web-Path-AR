@@ -222,6 +222,24 @@ Valores iniciais, a calibrar com medição real na fase de otimização.
 **Método:** medir → otimizar → medir de novo.
 Otimização que não move um número do orçamento não entra.
 
+### Medições reais
+
+| O que | Valor | Quando |
+|---|---|---|
+| GLB do CubeSat 1U | 149.424 bytes (~146 KB) | 2026-08-27 |
+| `model-viewer@3.5.0`, transferido | 252.390 bytes (~246 KB) | 2026-08-31 |
+| `model-viewer@3.5.0`, descomprimido | 935.194 bytes (~913 KB) | 2026-08-31 |
+
+**Consequência para o orçamento:** numa página de satélite, a biblioteca
+pesa **1,7× o modelo 3D**. O orçamento de ≤3 MB por GLB está folgadíssimo
+para este modelo; o custo dominante é o runtime 3D, que é fixo e igual para
+todas as páginas de satélite. Otimizar mais o GLB deste satélite não moveria
+número nenhum.
+
+**Ainda não medido:** o decodificador Draco (WASM), buscado à parte de um CDN
+do Google. O modelo exige `KHR_draco_mesh_compression`, então esse download
+está no caminho crítico e não aparece nos números acima.
+
 ---
 
 ## 8. Hospedagem e deploy

@@ -15,11 +15,11 @@
 
 | | |
 |---|---|
-| **Fase corrente** | 1 — Primeiro satélite |
-| **Concluído** | **Fase 0** — cadeia Git → GitHub → Cloudflare Pages → URL pública validada em produção (`web-path-ar.pages.dev`), com as quatro rotas conferidas por `curl` em 2026-08-31; inspeção técnica completa do GLB do CubeSat (`docs/CUBESAT_PILOT.md`) |
+| **Fase corrente** | 2 — AR no Android |
+| **Concluído** | **Fase 0** — cadeia de publicação validada em produção (`web-path-ar.pages.dev`), quatro rotas conferidas por `curl`. **Fase 1** — página de satélite completa, conteúdo vindo de JSON, validada em iPhone real (Safari) em 2026-08-31: modelo carrega, gira ao toque, página rola com gesto vertical, ficha e seções renderizadas |
 | **Adiantado de propósito** | Parte da Fase 3 (AR no iOS) já foi testada em iPhone real com o CubeSat, antes da ordem do roteiro — decisão deliberada para validar primeiro o risco técnico mais alto (ver [ADR-007](DECISIONS.md#adr-007--usdz-gerado-no-dispositivo) e [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md)). Resultado: AR Quick Look, USDZ on-device e escala confirmados para este modelo. Isso não substitui a Fase 3 completa (falta o resto do acervo) nem a Fase 2 (AR no Android, ainda não testada) |
 | **Bloqueios** | Nenhum |
-| **Pendências** | `poster.webp` do CubeSat (passo manual, ver Fase 1); teste equivalente em Android real (Scene Viewer); ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
+| **Pendências** | `poster.webp` do CubeSat (passo manual); **nenhum teste em Android até hoje**; ADR de PWA, se a Fase 8 justificar; domínio próprio (bloqueante só na Fase 9) |
 
 ---
 
@@ -110,9 +110,17 @@ real; o conteúdo longo vem do JSON, não do HTML.
 - [x] conteúdo em `data/satelites/cubesat.json`
 - [x] `src/satelite-page.js` monta ficha e seções a partir do JSON
 - [x] `src/styles.css` mobile-first
-- [x] rotas e tipos MIME conferidos em servidor local
-- [ ] **modelo carrega, gira e responde ao toque num celular real**
+- [x] rotas e tipos MIME conferidos em servidor local e em produção
+- [x] **modelo carrega, gira e responde ao toque em iPhone real** (Safari,
+      2026-08-31) — inclui a rolagem vertical sobre o visor, que valida o
+      `touch-action="pan-y"`
 - [ ] `poster.webp` gerado (passo manual — ver abaixo)
+
+**Fase concluída em 2026-08-31.** O `poster.webp` fica como débito: é
+melhoria de carregamento percebido, não parte do critério de pronto.
+
+**Não testado em Android.** O projeto não tem nenhum dado de Android até
+aqui — nem de visualização 3D, nem de AR.
 
 **Decisão tomada nesta fase:** conteúdo híbrido — título e resumo no HTML
 estático, corpo em JSON. Registrada em
@@ -147,22 +155,45 @@ poster e carregamento progressivo.
 
 ---
 
-## Fase 2 — AR no Android
+## Fase 2 — AR (implementação única, validação por plataforma)
 
-**Objetivo:** primeira experiência de AR funcional.
+> **Reorganizada em 2026-09-01.** O roteiro original separava "Fase 2 — AR no
+> Android" e "Fase 3 — AR no iOS", como se fossem duas implementações. Não
+> são: `ar-modes` é uma cascata, e o mesmo código serve as duas plataformas.
+> O que difere é a **validação**, que depende de hardware.
+>
+> Como não há Android disponível no momento, separar a fase por plataforma
+> travaria a implementação atrás de um aparelho que não existe. A fase passa
+> a ser: implementar uma vez, validar por plataforma, e fechar
+> **parcialmente** enquanto uma plataforma seguir sem teste.
 
-**Entrega:** `ar` e `ar-modes="webxr scene-viewer quick-look"` configurados.
+**Objetivo:** AR funcional a partir da página de satélite.
 
-**Critério de pronto:** AR abre e ancora em superfície num Android real.
+**Entrega:** `ar` e `ar-modes="webxr scene-viewer quick-look"` configurados,
+com botão de AR em português.
 
-**Aprendizado:** a cascata de `ar-modes`; como o Android dispara o Scene Viewer;
-WebXR vs Scene Viewer; escala em AR.
+**Critério de pronto (parcial, por plataforma):**
+
+- [ ] **iOS** — AR abre em iPhone real e ancora em superfície
+- [ ] **Android** — AR abre em Android real e ancora em superfície
+      — **bloqueado: sem aparelho disponível**
+
+**Consequência de fechar parcialmente:** a decisão de escala
+(`docs/CUBESAT_PILOT.md` §6.5) permanece em aberto. O teste que a resolve é
+justamente o do Android: saber se o Scene Viewer respeita o atributo `scale`
+da página ou lê apenas o GLB bruto. Até lá, a Opção B vale **só para iOS**,
+e nenhum ADR novo é registrado sobre isso.
+
+**Aprendizado:** a cascata de `ar-modes`; WebXR vs Scene Viewer vs Quick Look;
+por que o Android recebe um link para o arquivo e o iOS recebe uma cena;
+escala em AR.
 
 ---
 
-## Fase 3 — AR no iOS
+## Fase 3 — Cobertura de AR do acervo
 
-**Objetivo:** validar o ADR-007 (USDZ gerado no dispositivo).
+**Objetivo:** validar o ADR-007 (USDZ gerado no dispositivo) para **cada
+modelo**, não só para o piloto.
 
 **Critério de pronto:** AR abre no iPhone real, **para cada modelo do acervo**.
 
@@ -298,6 +329,84 @@ isso abre o Safari, onde o AR funciona.
 
 **Aprendizado:** níveis de correção de erro em QR Code; densidade e tamanho
 mínimo; ergonomia de impressão.
+
+---
+
+## Débitos técnicos
+
+Encontrados no checkpoint da Fase 1 (2026-08-31). Nenhum bloqueia a Fase 2.
+Registrados para não virarem descoberta cara depois.
+
+### D-01 — Tokens de cor duplicados em três arquivos
+
+`index.html`, `404.html` e `src/styles.css` cada um declara suas próprias
+cores em hexadecimal. Os mesmos cinco valores, três vezes.
+
+`index.html` e `404.html` não carregam `src/styles.css` — o CSS delas é
+inline, herdado da Fase 0, quando `src/` ainda não existia.
+
+**Risco:** mudar o tema exige editar três arquivos, e esquecer um produz uma
+página fora do padrão.
+
+**Quando corrigir:** Fase 5, quando o `index.html` virar o globo e for
+reescrito de qualquer forma. Corrigir antes seria mexer num arquivo que já
+está marcado para substituição.
+
+### D-02 — `modelo.credito` existe no JSON e não é usado
+
+A legenda "Modelo: NASA 3D Resources" está escrita à mão em
+`satelites/cubesat/index.html`, enquanto `data/satelites/cubesat.json` traz
+o mesmo dado em `modelo.credito`.
+
+**Diferença importante em relação ao ADR-009:** a duplicação de `nome` e
+`resumo` é decisão registrada, com razão de desempenho. Esta aqui é
+descuido — não há ganho nenhum, e o crédito de autoria é justamente o tipo
+de campo que muda por satélite.
+
+**Risco:** o segundo satélite terá crédito diferente, e quem copiar a página
+vai esquecer de trocar — atribuindo à NASA um modelo que não é dela.
+
+**Quando corrigir:** Fase 7, ao adicionar o segundo satélite, que é
+exatamente quando o problema aparece. Ou antes, é uma linha.
+
+### D-03 — Texto curto tem nome diferente nos dois schemas
+
+Localidade usa `descricao`; satélite usa `resumo`. O `ARCHITECTURE.md` §4.3
+promete "mesma forma simétrica".
+
+**Quando corrigir:** Fase 6, antes de a primeira localidade existir. Enquanto
+só um lado está implementado, renomear é editar um arquivo. Depois de 15
+localidades, é migração de schema.
+
+### D-04 — Nenhum satélite é alcançável por navegação
+
+`index.html` não tem link nenhum. `/satelites/cubesat/` só é acessível
+digitando a URL ou por QR Code.
+
+**Não é bug:** a arquitetura prevê entrada por QR Code, e o globo (Fase 5)
+indexa localidades, não satélites.
+
+**É uma pergunta em aberto:** como alguém descobre um satélite sem ter o
+papel impresso na mão? O `ROADMAP.md` não responde isso em nenhuma fase.
+
+### D-05 — Decodificador Draco nunca medido
+
+O GLB exige `KHR_draco_mesh_compression`. O `<model-viewer>` busca o
+decodificador WASM de um CDN do Google, à parte da biblioteca. Está no
+caminho crítico e não entrou em nenhuma medição.
+
+**Sabemos que funciona** (o modelo renderizou em iPhone real, em rede real).
+**Não sabemos quanto custa.**
+
+**Quando corrigir:** Fase 8, junto com a medição de rede móvel.
+
+### D-06 — `poster.webp` ausente
+
+Sem poster, a área do visor fica vazia até o modelo carregar. O código já
+consome `modelo.poster` quando o campo não é `null`.
+
+**Quando corrigir:** oportunisticamente. Exige renderizar a cena — passo
+manual.
 
 ---
 

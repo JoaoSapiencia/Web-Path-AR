@@ -126,7 +126,40 @@ button:focus-visible {
 model-viewer {
   width: 100%;
   height: 100%;
+  /* O botão de AR é posicionado em relação a este elemento. O model-viewer
+     já se declara relative internamente; explicitar aqui evita depender de
+     um detalhe interno da biblioteca. */
+  position: relative;
   --poster-color: transparent;
+}
+
+/* Botão de AR — vive dentro do <model-viewer>, no slot "ar-button".
+   O componente o esconde sozinho onde AR não é suportado, então nenhuma
+   detecção de plataforma é necessária aqui. */
+.botao-ar {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* 44px é o alvo de toque mínimo recomendado para não errar o dedo. */
+  min-height: 44px;
+  padding: 0.65rem 1.25rem;
+
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: rgba(12, 16, 24, 0.92);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  /* Impede o duplo-toque de dar zoom em vez de acionar o botão. */
+  touch-action: manipulation;
+}
+
+.botao-ar:hover {
+  border-color: var(--destaque);
+  color: var(--destaque);
 }
 
 .visor-legenda {

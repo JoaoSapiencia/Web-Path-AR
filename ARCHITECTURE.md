@@ -149,8 +149,52 @@ hoje. Reservar o campo é barato; migrar o schema depois não é.
 
 ### 4.3 Satélites — `data/satelites/<slug>.json`
 
-Mesma forma simétrica: adicionar um satélite e adicionar uma localidade são
-a mesma operação previsível.
+Consumido apenas pela página do satélite.
+
+```json
+{
+  "slug": "cubesat",
+  "nome": "CubeSat 1U",
+  "resumo": "Um satélite do tamanho de um cubo de 10 centímetros.",
+  "modelo": {
+    "arquivo": "modelo.glb",
+    "poster": null,
+    "escala": "0.048 0.048 0.048",
+    "alt": "Descrição textual do modelo, para leitores de tela.",
+    "credito": "NASA 3D Resources"
+  },
+  "ficha": [{ "rotulo": "Dimensões", "valor": "10 × 10 × 10 cm" }],
+  "secoes": [{ "titulo": "...", "texto": "..." }],
+  "locais_relacionados": []
+}
+```
+
+`modelo.poster` é `null` enquanto a imagem não existir — o código omite o
+atributo nesse caso, em vez de apontar para um arquivo ausente.
+
+`modelo.escala` existe porque o GLB não declara unidade confiável. Ver
+`docs/CUBESAT_PILOT.md` §6.
+
+`locais_relacionados` está **previsto e vazio**, espelhando
+`satelites_relacionados` do lado da localidade (ADR-004).
+
+### 4.4 Simetria entre os dois schemas
+
+A intenção é que adicionar um satélite e adicionar uma localidade sejam a
+mesma operação previsível. Os campos comuns são:
+
+| Campo | Localidade | Satélite |
+|---|---|---|
+| `slug` | sim | sim |
+| `nome` | sim | sim |
+| `secoes` | sim | sim |
+| Relação recíproca | `satelites_relacionados` | `locais_relacionados` |
+| Texto curto | `descricao` | **`resumo`** |
+
+**Divergência conhecida:** o texto curto tem nomes diferentes nos dois lados.
+É débito registrado, não decisão — ver `ROADMAP.md`, "Débitos técnicos". A
+localidade ainda não foi implementada (Fase 6), então a correção é barata
+enquanto só existe um dos dois lados.
 
 ---
 

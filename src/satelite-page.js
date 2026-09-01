@@ -72,7 +72,34 @@ function montarModelo(modelo) {
   mv.setAttribute("touch-action", "pan-y");
   mv.setAttribute("shadow-intensity", "1");
 
-  // AR entra na Fase 2. Aqui a página é só visualização 3D.
+  // --- Realidade Aumentada ---
+  //
+  // ar-modes é uma CASCATA: o componente tenta os motores na ordem
+  // declarada e usa o primeiro disponível no aparelho.
+  //
+  //   Android  -> scene-viewer  (app nativo; recebe um link para o GLB bruto)
+  //   iOS      -> quick-look    (USDZ gerado aqui no navegador — ADR-007)
+  //   Desktop  -> nenhum        (o botão não aparece; o 3D continua)
+  //
+  // quick-look precisa estar explícito, senão a auto-geração de USDZ não
+  // acontece e o iOS fica sem AR.
+  mv.setAttribute("ar", "");
+  mv.setAttribute("ar-modes", "webxr scene-viewer quick-look");
+
+  // Escala real, sem redimensionar com os dedos. É o ponto pedagógico deste
+  // modelo: um CubeSat 1U tem 10 cm de lado, e vê-lo do tamanho certo na
+  // mesa é a informação. Validado em iPhone real em 2026-08-27.
+  mv.setAttribute("ar-scale", "fixed");
+  mv.setAttribute("ar-placement", "floor");
+
+  // Botão próprio, em português. O botão padrão do model-viewer é em inglês.
+  // O componente cuida de escondê-lo onde AR não é suportado.
+  const botaoAr = document.createElement("button");
+  botaoAr.setAttribute("slot", "ar-button");
+  botaoAr.className = "botao-ar";
+  botaoAr.type = "button";
+  botaoAr.textContent = "Ver no seu espaço";
+  mv.append(botaoAr);
 
   mv.addEventListener("error", () => {
     mostrarErro(

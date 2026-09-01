@@ -19,21 +19,30 @@ inicial.
 
 ## Estado atual
 
-**Fase 0 — Esqueleto ambulante.** O planejamento completo está em
-[ROADMAP.md](ROADMAP.md).
+**Fases 0 e 1 concluídas.** Fase corrente: 2 — AR no Android. O planejamento
+completo está em [ROADMAP.md](ROADMAP.md).
 
 O que já existe e foi verificado em dispositivo real:
 
-- AR Quick Look validado em iPhone real com o modelo CubeSat 1U
-  (2026-08-27) — USDZ gerado no próprio dispositivo, escala fisicamente
-  plausível. Detalhes em [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md).
+- **Cadeia de publicação** validada em produção — `/`,
+  `/satelites/<slug>/`, o `.glb` e rotas inexistentes respondem cada um com
+  o status e o tipo corretos.
+- **Página de satélite** (`/satelites/cubesat/`) validada em iPhone real
+  (Safari, 2026-08-31): o modelo carrega e gira ao toque, a página rola com
+  gesto vertical sobre o visor, e ficha e seções vêm do JSON.
+- **AR Quick Look** validado em iPhone real com o CubeSat 1U (2026-08-27) —
+  USDZ gerado no próprio dispositivo, escala fisicamente plausível. Detalhes
+  em [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md).
 
 O que ainda **não** foi verificado:
 
-- AR no Android (Scene Viewer) — nenhum teste feito.
+- **Android — nada.** Nem visualização 3D, nem AR (Scene Viewer). É a maior
+  lacuna do projeto hoje.
 - Os demais modelos do acervo no iOS.
-- Roteamento de `/satelites/<slug>/` em produção (ver
-  [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md) §7).
+- Custo do decodificador Draco, que é baixado à parte e está no caminho
+  crítico.
+
+Débitos técnicos conhecidos estão listados no [ROADMAP.md](ROADMAP.md).
 
 ---
 

@@ -76,7 +76,7 @@ Itens que exigem teste em navegador/dispositivo real antes de serem tratados com
 - **Suporte a Draco no Scene Viewer (Android).** Ainda não testado. O Scene Viewer não roda dentro do `<model-viewer>`; ele é um app nativo que recebe um link para o GLB e faz seu próprio parsing. Não há confirmação de que ele descomprime Draco da mesma forma — a validação no iOS não se estende ao Android, porque o caminho de dados é diferente (ver seção 6.6).
 - ~~Geração de USDZ a partir de um modelo Draco-comprimido.~~ **Validado em 2026-08-27** — ver seção 7. A conversão para USDZ funcionou no dispositivo.
 - ~~Escala real de exibição.~~ **Validado para iOS em 2026-08-27**, com ressalvas — ver seções 6.7 e 7. Ainda pendente para Android.
-- **Orientação visual correta.** Validada indiretamente (o modelo abriu "em pé" no teste), mas não foi um objetivo explícito do teste de 2026-08-27 — vale confirmação dedicada mais adiante.
+- ~~Orientação visual correta.~~ **Validada em 2026-08-31**, na página da Fase 1 aberta em iPhone real: o modelo renderiza em pé e responde à rotação por toque. A conversão Z-up (Blender) → Y-up (glTF) da §3 está confirmada visualmente.
 
 ---
 

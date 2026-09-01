@@ -101,10 +101,13 @@ function montarModelo(modelo) {
   botaoAr.textContent = "Ver no seu espaço";
   mv.append(botaoAr);
 
-  mv.addEventListener("error", () => {
-    mostrarErro(
-      "Não foi possível carregar o modelo 3D. Verifique a conexão e recarregue a página."
-    );
+  // A mensagem NÃO afirma a causa. Um modelo pode falhar por rede, por
+  // caminho errado, por arquivo corrompido ou por falta de WebGL — e dizer
+  // "verifique a conexão" manda quem lê procurar no lugar errado quando a
+  // causa é outra. O diagnóstico vai para o console, onde é útil.
+  mv.addEventListener("error", (evento) => {
+    console.error("Falha ao carregar o modelo:", mv.src, evento.detail ?? evento);
+    mostrarErro("Não foi possível carregar o modelo 3D desta página.");
   });
 
   visor.append(mv);
@@ -127,10 +130,8 @@ async function carregar() {
     montarFicha(dados.ficha);
     montarSecoes(dados.secoes);
   } catch (causa) {
-    console.error(causa);
-    mostrarErro(
-      "Não foi possível carregar o conteúdo desta página. Verifique a conexão e tente novamente."
-    );
+    console.error(`Falha ao carregar /data/satelites/${slug}.json —`, causa);
+    mostrarErro("Não foi possível carregar o conteúdo desta página.");
   }
 }
 

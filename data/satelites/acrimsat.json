@@ -3,19 +3,37 @@
   "nome": "ACRIMSAT",
   "resumo": "Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.",
   "modelo": {
-    "arquivo": "acrimsat.glb",
+    "arquivo": "modelo.glb",
     "poster": null,
     "escala": "0.048 0.048 0.048",
     "alt": "Modelo tridimensional do satélite ACRIMSAT: um corpo amarelado com formato aproximadamente hexagonal, com painéis solares retangulares sustentados por hastes nas laterais e instrumentos científicos no topo.",
     "credito": "NASA 3D Resources"
   },
   "ficha": [
-    { "rotulo": "Classe", "valor": "Satélite científico (Monitoramento solar)" },
-    { "rotulo": "Operador", "valor": "NASA / JPL" },
-    { "rotulo": "Dimensões", "valor": "77,5 × 77,5 × 66 cm (178 cm de envergadura)" },
-    { "rotulo": "Massa no lançamento", "valor": "115 kg" },
-    { "rotulo": "Lançamento", "valor": "20 de dezembro de 1999" },
-    { "rotulo": "Órbita típica", "valor": "Heliossíncrona, 683–727 km" }
+    {
+      "rotulo": "Classe",
+      "valor": "Satélite científico (Monitoramento solar)"
+    },
+    {
+      "rotulo": "Operador",
+      "valor": "NASA / JPL"
+    },
+    {
+      "rotulo": "Dimensões",
+      "valor": "77,5 × 77,5 × 66 cm (178 cm de envergadura)"
+    },
+    {
+      "rotulo": "Massa no lançamento",
+      "valor": "115 kg"
+    },
+    {
+      "rotulo": "Lançamento",
+      "valor": "20 de dezembro de 1999"
+    },
+    {
+      "rotulo": "Órbita típica",
+      "valor": "Heliossíncrona, 683–727 km"
+    }
   ],
   "secoes": [
     {

@@ -132,6 +132,7 @@ otimizado. Ver [ADR-005](DECISIONS.md#adr-005--originais-fora-do-repositório).
 | [DECISIONS.md](DECISIONS.md) | Por que cada escolha foi feita (ADRs, acumulativo) |
 | [ROADMAP.md](ROADMAP.md) | Em que ordem construir, e o que aprender em cada fase |
 | [docs/CUBESAT_PILOT.md](docs/CUBESAT_PILOT.md) | Piloto técnico: inspeção e testes do primeiro modelo |
+| [docs/DIAGNOSTICO_MODELO.md](docs/DIAGNOSTICO_MODELO.md) | O modelo 3D não aparece: causas conhecidas e checklist |
 
 ---
 

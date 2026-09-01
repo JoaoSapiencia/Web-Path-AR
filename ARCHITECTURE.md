@@ -311,7 +311,7 @@ Nada é impresso apontando para `*.pages.dev`.
 |---|---|---|
 | Auto-geração de USDZ falhar em algum modelo | Sem AR no iOS | Testar modelo a modelo na Fase 3; USDZ pré-gerado como plano B |
 | Escala real em AR (satélites de 10 m+) | Modelo não cabe na sala | Definir escala pedagógica explícita |
-| WebGL indisponível em celular antigo | Globo e 3D falham | Estado de erro claro, nunca tela branca |
+| WebGL indisponível em celular antigo | Globo e 3D falham | Estado de erro claro, nunca tela branca; ver `docs/DIAGNOSTICO_MODELO.md` |
 | OpenFreeMap sem SLA | Globo indisponível | Fallback visual; documentar risco |
 | Estilo de mapa de ruas em tema espacial | Estética conflitante | Estilo escuro/minimalista, trabalho de estilo previsto |
 | Rede escolar saturada | Assets não carregam | Orçamento de performance + cache HTTP |

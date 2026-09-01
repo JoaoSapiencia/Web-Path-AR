@@ -85,7 +85,7 @@ def validar_satelite(caminho_json):
             )
         # ADR-009: nome e resumo são copiados de propósito para o HTML.
         # Cópia deliberada precisa ser conferida, senão vira divergência.
-        for campo in ("nome", "resumo"):
+        for campo in ("nome", "nome_completo", "resumo"):
             valor = dados.get(campo)
             if valor and valor not in html:
                 aviso(
@@ -101,23 +101,117 @@ def validar_satelite(caminho_json):
                 f"maiúscula ou espaço — quebra em servidor Linux"
             )
 
-    # --- escala herdada por engano ---
-    escala = modelo.get("escala")
-    if escala:
-        outros = [
-            p.stem
-            for p in (RAIZ / "data" / "satelites").glob("*.json")
-            if p.stem != slug_arquivo
-            and json.loads(p.read_text(encoding="utf-8"))
-            .get("modelo", {})
-            .get("escala") == escala
-        ]
-        if outros:
-            aviso(
-                f"{slug_arquivo}: escala {escala!r} é idêntica à de "
-                f"{', '.join(outros)}. Escala é calculada a partir da caixa "
-                f"delimitadora de CADA modelo — confira se não foi copiada."
-            )
+    # --- tamanho final em metros ---
+    # Comparar o campo "escala" entre satélites não basta: o mesmo número
+    # produz tamanhos diferentes conforme a caixa delimitadora e a escala
+    # dos NÓS de cada modelo. O que importa é o tamanho final.
+    if arquivo:
+        caminho = RAIZ / "assets" / "models" / slug_arquivo / arquivo
+        if existe_com_maiusculas_exatas(caminho):
+            # Sinal forte de escala copiada por engano: o arquivo JÁ declara
+            # escala nos próprios nós (ou seja, o autor calibrou o tamanho)
+            # e ainda assim a página aplica um fator por cima.
+            if modelo.get("escala") and nos_tem_escala(caminho):
+                erro(
+                    f"{slug_arquivo}: o GLB já declara escala nos próprios nós "
+                    f"(o arquivo foi calibrado pelo autor), mas o JSON aplica "
+                    f"modelo.escala={modelo['escala']!r} por cima. "
+                    f"Provável cópia de outro satélite — use escala: null."
+                )
+
+            nativo = maior_dimensao_glb(caminho)
+            if nativo:
+                fator = primeiro_fator(modelo.get("escala"))
+                final = nativo * fator
+                if not (0.03 <= final <= 4.0):
+                    erro(
+                        f"{slug_arquivo}: o modelo apareceria com {final:.3f} m "
+                        f"(nativo {nativo:.3f} m x escala {fator}). "
+                        f"Fora da faixa utilizável em sala (3 cm a 4 m)."
+                    )
+                else:
+                    aviso(
+                        f"{slug_arquivo}: tamanho final {final:.3f} m "
+                        f"({final * 100:.1f} cm) — confira se corresponde ao "
+                        f"objeto real."
+                    )
+
+
+def primeiro_fator(escala) -> float:
+    """O campo escala é uma string "x y z" ou None. None significa
+    "usar o tamanho nativo do arquivo", ou seja, fator 1."""
+    if not escala:
+        return 1.0
+    try:
+        return float(str(escala).split()[0])
+    except (ValueError, IndexError):
+        return 1.0
+
+
+def maior_dimensao_glb(caminho: Path):
+    """Maior dimensão do modelo em metros, COMO O VISUALIZADOR VÊ.
+
+    A armadilha que originou esta função: ler apenas min/max dos vértices
+    ignora o campo `scale` dos nós. O ACRIMSAT tem escala 0,01737 nos nós —
+    seus vértices vão a 138 unidades, mas ele renderiza com 2,42 m. Ler só
+    os vértices levaria à conclusão oposta.
+    """
+    import struct
+
+    try:
+        with open(caminho, "rb") as f:
+            struct.unpack("<III", f.read(12))
+            tam, _ = struct.unpack("<II", f.read(8))
+            g = json.loads(f.read(tam).decode("utf-8"))
+    except (OSError, struct.error, json.JSONDecodeError, UnicodeDecodeError):
+        return None
+
+    acessores = g.get("accessors", [])
+    lo = [float("inf")] * 3
+    hi = [float("-inf")] * 3
+
+    for no in g.get("nodes", []):
+        if "mesh" not in no:
+            continue
+        # matrix combinaria rotação e escala; não ocorre no acervo atual e
+        # decompô-la aqui não se paga. Se aparecer, é melhor avisar.
+        if "matrix" in no:
+            return None
+        s = no.get("scale", [1, 1, 1])
+        t = no.get("translation", [0, 0, 0])
+        for prim in g["meshes"][no["mesh"]].get("primitives", []):
+            i = prim.get("attributes", {}).get("POSITION")
+            if i is None or "min" not in acessores[i]:
+                continue
+            a = acessores[i]
+            for k in range(3):
+                lo[k] = min(lo[k], a["min"][k] * s[k] + t[k])
+                hi[k] = max(hi[k], a["max"][k] * s[k] + t[k])
+
+    if lo[0] == float("inf"):
+        return None
+    return max(hi[k] - lo[k] for k in range(3))
+
+
+def nos_tem_escala(caminho: Path) -> bool:
+    """True se algum nó com malha declara escala diferente de 1.
+
+    Quando isso acontece, o modelador já converteu o arquivo para metros —
+    aplicar outro fator na página quase sempre é engano."""
+    import struct
+
+    try:
+        with open(caminho, "rb") as f:
+            struct.unpack("<III", f.read(12))
+            tam, _ = struct.unpack("<II", f.read(8))
+            g = json.loads(f.read(tam).decode("utf-8"))
+    except (OSError, struct.error, json.JSONDecodeError, UnicodeDecodeError):
+        return False
+
+    for no in g.get("nodes", []):
+        if "mesh" in no and no.get("scale", [1, 1, 1]) != [1, 1, 1]:
+            return True
+    return False
 
 
 def existe_com_maiusculas_exatas(caminho: Path) -> bool:

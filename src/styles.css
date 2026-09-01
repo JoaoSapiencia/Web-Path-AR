@@ -91,6 +91,16 @@ button:focus-visible {
   padding: 1.5rem var(--espaco) 4rem;
 }
 
+/* Expansão de uma sigla, logo abaixo do título. Existe porque "ACRIMSAT" e
+   "Active Cavity Irradiance Monitor Satellite" são dois dados diferentes,
+   não duas versões do mesmo. */
+.nome-completo {
+  margin: -0.25rem 0 1rem;
+  color: var(--secundario);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
 .resumo {
   color: var(--secundario);
   font-size: 1.05rem;

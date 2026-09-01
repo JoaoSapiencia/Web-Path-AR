@@ -1,11 +1,12 @@
 {
   "slug": "acrimsat",
   "nome": "ACRIMSAT",
+  "nome_completo": "Active Cavity Irradiance Monitor Satellite",
   "resumo": "Um satélite da NASA projetado para medir variações na energia solar que atinge a Terra, fundamental para entender o papel do Sol nas mudanças climáticas globais.",
   "modelo": {
     "arquivo": "modelo.glb",
     "poster": null,
-    "escala": "0.048 0.048 0.048",
+    "escala": null,
     "alt": "Modelo tridimensional do satélite ACRIMSAT: um corpo amarelado com formato aproximadamente hexagonal, com painéis solares retangulares sustentados por hastes nas laterais e instrumentos científicos no topo.",
     "credito": "NASA 3D Resources"
   },
